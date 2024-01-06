@@ -1,28 +1,38 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import Splashscreen from "../views/Splashscreen";
 import Login from "../views/Login";
+import HomeAdmin from "../views/HomeAdmin";
 import Home from "../views/Home";
+import DrawerContent from "../components/DrawerContent";
 
-const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const Routes = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      <Drawer.Navigator
+        drawerContent={(props) => <DrawerContent {...props} />}
         styles={styles.container}
         initialRouteName="SplashScreen"
       >
-        <Stack.Screen
+        <Drawer.Screen
           name="SplashScreen"
           component={Splashscreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
+        <Drawer.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Drawer.Screen name="Home" component={isAdmin ? HomeAdmin : Home} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
