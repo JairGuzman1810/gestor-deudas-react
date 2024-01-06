@@ -5,9 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Splashscreen from "../views/Splashscreen";
 import Login from "../views/Login";
-import HomeAdmin from "../views/HomeAdmin";
 import Home from "../views/Home";
 import DrawerContent from "../components/DrawerContent";
+import ChangePassword from "../views/ChangePassword";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,14 +24,23 @@ const Routes = () => {
         <Drawer.Screen
           name="SplashScreen"
           component={Splashscreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
         <Drawer.Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="Home"
+          component={Home}
           options={{ headerShown: false }}
         />
-        <Drawer.Screen name="Home" component={isAdmin ? HomeAdmin : Home} />
+        <Drawer.Screen
+          name="ChangePassword"
+          component={ChangePassword}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );

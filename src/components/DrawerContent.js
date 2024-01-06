@@ -28,6 +28,7 @@ const DrawerContent = (props) => {
 
   const handleChangePassword = () => {
     // Agrega aquí la lógica para cambiar la contraseña
+    props.navigation.navigate("ChangePassword");
   };
 
   return (
