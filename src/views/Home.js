@@ -7,13 +7,18 @@ import {
   Platform,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
-          <TouchableOpacity style={styles.toolbarButton}>
+          <TouchableOpacity
+            style={styles.toolbarButton}
+            onPress={() => navigation.openDrawer()}
+          >
             <Ionicons name="menu" size={30} color="white" />
           </TouchableOpacity>
         </View>

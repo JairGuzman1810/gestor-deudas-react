@@ -8,6 +8,7 @@ import Login from "../views/Login";
 import Home from "../views/Home";
 import DrawerContent from "../components/DrawerContent";
 import ChangePassword from "../views/ChangePassword";
+import DrawerContentAdmin from "../components/DrawerContentAdmin";
 
 const Drawer = createDrawerNavigator();
 
@@ -17,7 +18,14 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        drawerContent={(props) => <DrawerContent {...props} />}
+        //Se tiene que condicionar con el return, ya que si no, sale en blanco
+        drawerContent={(props) => {
+          return isAdmin ? (
+            <DrawerContentAdmin {...props} />
+          ) : (
+            <DrawerContent {...props} />
+          );
+        }}
         styles={styles.container}
         initialRouteName="SplashScreen"
       >

@@ -1,4 +1,3 @@
-// components/DrawerContent.js
 import React from "react";
 import { useFonts } from "expo-font";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
@@ -8,7 +7,7 @@ import {
 } from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const DrawerContent = (props) => {
+const DrawerContentAdmin = (props) => {
   let [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../fonts/montserratbold.ttf"),
     "Montserrat-Regular": require("../fonts/montserratregular.ttf"),
@@ -47,6 +46,14 @@ const DrawerContent = (props) => {
       </View>
       {/* Container para Cambiar Contraseña y Cerrar Sesión */}
       <View style={styles.actionContainer}>
+        <TouchableOpacity style={styles.actionItem}>
+          <Ionicons name="person" size={24} color="black" />
+          <Text style={styles.actionText}>Mis usuarios</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionItem}>
+          <Ionicons name="person-add" size={24} color="black" />
+          <Text style={styles.actionText}>Crear usuarios</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionItem}
           onPress={handleChangePassword}
@@ -106,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerContent;
+export default DrawerContentAdmin;
