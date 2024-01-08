@@ -46,6 +46,12 @@ const ChangePassword = () => {
         <Text style={styles.label}>Contraseña Antigua</Text>
         <View style={styles.separator} />
         <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name={"lock-closed"}
+            color="black"
+          />
           <TextInput
             style={styles.textinput}
             value={oldPassword}
@@ -67,6 +73,12 @@ const ChangePassword = () => {
         <Text style={styles.label}>Nueva Contraseña</Text>
         <View style={[styles.separator]} />
         <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name={"lock-closed"}
+            color="black"
+          />
           <TextInput
             style={styles.textinput}
             value={newPassword}
@@ -86,6 +98,12 @@ const ChangePassword = () => {
       {/* Repeat Password */}
       <View style={styles.section}>
         <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name={"lock-closed"}
+            color="black"
+          />
           <TextInput
             style={styles.textinput}
             value={repeatPassword}
@@ -170,10 +188,21 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     backgroundColor: "#808080",
-    elevation: 5,
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   toolbarContainer: {
     flexDirection: "row",
@@ -193,6 +222,9 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 5,
+  },
+  iconinput: {
+    marginRight: 5,
   },
 });
 

@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import DebtorItem from "../components/DebtorItem";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -36,7 +37,7 @@ const Home = () => {
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => {
-            /* Handle add button press */
+            navigation.navigate("NewDebtor");
           }}
         >
           <Ionicons name="person-add" size={28} color="white" />
@@ -60,6 +61,7 @@ const Home = () => {
           <Ionicons name="filter" size={28} color="white" />
         </TouchableOpacity>
       </View>
+      <Text>Home</Text>
     </View>
   );
 };
@@ -74,11 +76,22 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     backgroundColor: "#808080",
-    elevation: 5,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 4,
     paddingHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   toolbarContainer: {
     flexDirection: "row",
@@ -91,6 +104,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold",
     fontSize: 18,
     color: "white",
+    marginLeft: -15,
   },
   iconButton: {
     padding: 5,

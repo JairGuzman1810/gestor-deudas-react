@@ -6,9 +6,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import Splashscreen from "../views/Splashscreen";
 import Login from "../views/Login";
 import Home from "../views/Home";
-import DrawerContent from "../components/DrawerContent";
+import DrawerContentUser from "../components/DrawerContentUser";
 import ChangePassword from "../views/ChangePassword";
 import DrawerContentAdmin from "../components/DrawerContentAdmin";
+import NewDebtor from "../views/NewDebtor";
 
 const Drawer = createDrawerNavigator();
 
@@ -23,7 +24,7 @@ const Routes = () => {
           return isAdmin ? (
             <DrawerContentAdmin {...props} />
           ) : (
-            <DrawerContent {...props} />
+            <DrawerContentUser {...props} />
           );
         }}
         styles={styles.container}
@@ -47,6 +48,11 @@ const Routes = () => {
         <Drawer.Screen
           name="ChangePassword"
           component={ChangePassword}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="NewDebtor"
+          component={NewDebtor}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>

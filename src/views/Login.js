@@ -35,16 +35,27 @@ const LoginScreen = () => {
       />
       <View style={styles.cardContainer}>
         <Text style={styles.title}>Inicio de sesión</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Correo"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
         <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name={"mail"}
+            color="black"
+          />
+          <TextInput
+            style={styles.textinput}
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Correo"
+          ></TextInput>
+        </View>
+        <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name={"lock-closed"}
+            color="black"
+          />
           <TextInput
             style={styles.textinput}
             value={password}
@@ -125,6 +136,9 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold",
     fontSize: 16,
     color: "#fff",
+  },
+  iconinput: {
+    marginRight: 5,
   },
 });
 

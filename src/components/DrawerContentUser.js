@@ -8,7 +8,7 @@ import {
 } from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const DrawerContent = (props) => {
+const DrawerContentUser = (props) => {
   let [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../fonts/montserratbold.ttf"),
     "Montserrat-Regular": require("../fonts/montserratregular.ttf"),
@@ -106,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerContent;
+export default DrawerContentUser;
