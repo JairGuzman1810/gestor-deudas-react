@@ -1,23 +1,111 @@
-import React from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, StyleSheet, Platform, Alert } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const DebtorItem = () => {
+const DebtorItem = ({ debtor }) => {
+  const [isHeld, setIsHeld] = useState(false);
+
+  const handlePress = () => {
+    Alert.alert("PRESS");
+  };
+
+  const handleLongPress = () => {
+    setIsHeld(true);
+    // Mostrar un Alert personalizado con opciones
+    //TODO CAMBIAR A UNO PERSONALIZADO
+    Alert.alert(
+      `Deudor "${debtor.nombre}" seleccionado.`,
+      "¿Qué acción desea realizar?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+          onPress: () => {
+            setIsHeld(false);
+          },
+        },
+        {
+          text: "Editar",
+          onPress: () => {
+            // Lógica para editar
+            setIsHeld(false);
+          },
+        },
+        {
+          text: "Eliminar",
+          onPress: () => {
+            // Lógica para eliminar
+            setIsHeld(false);
+          },
+          style: "destructive",
+        },
+      ],
+      // eslint-disable-next-line prettier/prettier
+      { cancelable: false }
+    );
+  };
+  const handlePressOut = () => {
+    if (isHeld) {
+      setIsHeld(false);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
+    <View
+      style={[styles.container, isHeld ? { backgroundColor: "#82E7EB" } : null]}
+    >
+      <TouchableOpacity
+        style={styles.content}
+        activeOpacity={0.5}
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        onPressOut={handlePressOut}
+      >
         <View style={styles.leftcontainer}>
-          <View style={[styles.indicator, { backgroundColor: "#878585" }]} />
-          <Text style={styles.name}>Deudor</Text>
+          <View
+            style={[
+              styles.indicator,
+              {
+                backgroundColor:
+                  debtor.deudaindividual === 0
+                    ? "#30BFBF" // Color para deudaindividual igual a 0
+                    : debtor.deudaindividual > 0
+                      ? "#1A7A13" // Color para deudaindividual mayor a 0
+                      : "#B11D1D", // Color para deudaindividual menor a 0
+              },
+            ]}
+          />
+          <Text style={styles.name}>{debtor.nombre}</Text>
         </View>
         <View style={styles.rightcontainer}>
           <View style={styles.rightcontent}>
-            <Text style={[styles.amount, { color: "#B11D1D" }]}>
-              $-2,000.00
+            <Text
+              style={[
+                styles.amount,
+                {
+                  color:
+                    debtor.deudaindividual === 0
+                      ? "#30BFBF" // Color para deudaindividual igual a 0
+                      : debtor.deudaindividual > 0
+                        ? "#1A7A13" // Color para deudaindividual mayor a 0
+                        : "#B11D1D", // Color para deudaindividual menor a 0
+                },
+              ]}
+            >
+              $
+              {debtor.deudaindividual.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </Text>
-            <Text style={[styles.date]}>18/12/2023 10:00:00</Text>
+            <Text style={styles.date}>
+              {debtor.ultimomovimiento !== 0
+                ? new Date(debtor.ultimomovimiento).toLocaleString()
+                : "--"}{" "}
+            </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -30,6 +118,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginBottom: 5,
     borderRadius: 2,
+    borderTopStartRadius: 4,
+    borderBottomStartRadius: 4,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -80,7 +170,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   date: {
-    // No need for marginBottom or additional styling
     fontFamily: "Montserrat-Regular",
     marginRight: 8,
     color: "#878585",

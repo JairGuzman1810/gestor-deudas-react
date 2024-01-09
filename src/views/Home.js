@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,25 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+
+import DebtorItem from "../components/DebtorItem";
+import { getAllDebtors } from "../utils/DebtorHelper";
 
 const Home = () => {
+  const [debtors, setDebtors] = useState({});
+  const [isSearching, setIsSerching] = useState(false);
+  useEffect(() => {
+    // Set up the real-time listener and get the unsubscribe function
+    const unsubscribe = getAllDebtors(setDebtors);
+
+    // Clean up the listener when the component unmounts
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []); // El array vacío [] significa que se ejecutará solo una vez
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -43,12 +60,23 @@ const Home = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.iconButton}
+          style={[
+            styles.iconButton,
+            {
+              backgroundColor: isSearching
+                ? "#D3D2D2" // Color para deudaindividual igual a 0
+                : "#808080",
+            },
+          ]}
           onPress={() => {
-            /* Handle search button press */
+            setIsSerching(!isSearching);
           }}
         >
-          <Ionicons name="search-circle" size={28} color="white" />
+          <Ionicons
+            name={isSearching ? "search-circle-outline" : "search-circle"}
+            size={28}
+            color="white"
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -60,7 +88,11 @@ const Home = () => {
           <Ionicons name="filter" size={28} color="white" />
         </TouchableOpacity>
       </View>
-      <Text>Home</Text>
+      <FlatList
+        data={Object.values(debtors)}
+        keyExtractor={(item) => item.uid}
+        renderItem={({ item }) => <DebtorItem debtor={item} />}
+      />
     </View>
   );
 };
@@ -97,16 +129,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   toolbarButton: {
-    marginRight: 10,
+    marginRight: 5,
   },
   title: {
     fontFamily: "Montserrat-Bold",
     fontSize: 18,
     color: "white",
-    marginLeft: -15,
   },
   iconButton: {
-    padding: 5,
+    width: "15%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

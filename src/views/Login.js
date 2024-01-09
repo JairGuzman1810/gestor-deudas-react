@@ -41,7 +41,7 @@ const LoginScreen = () => {
       const response = await signInWithEmailAndPassword(auth, email, password);
       if (response.user) {
         // The user is authenticated successfully
-        console.log("Login successful:", response.user);
+        //TODO console.log("Login successful:", response.user);
         navigation.navigate("Home");
       } else {
         // Something unexpected happened, and the user is not authenticated
