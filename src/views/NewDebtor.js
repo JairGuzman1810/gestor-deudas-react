@@ -1,3 +1,5 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -7,11 +9,12 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
 
 const NewDebtor = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [notes, setNotes] = useState("");
 
   const goBack = () => {
     navigation.navigate("Home");
@@ -29,6 +32,71 @@ const NewDebtor = () => {
           <Text style={styles.title}>Nuevo deudor</Text>
         </View>
       </View>
+      <View style={styles.content}>
+        {/* Nombre */}
+        <View style={styles.section}>
+          <View style={styles.input}>
+            <Ionicons
+              style={styles.iconinput}
+              size={20}
+              name="person"
+              color="black"
+            />
+            <TextInput
+              value={name}
+              onChangeText={(text) => setName(text)}
+              style={styles.textinput}
+              placeholder="Nombre"
+            />
+          </View>
+        </View>
+        {/* Telefono */}
+        <View style={styles.section}>
+          <View style={styles.input}>
+            <Ionicons
+              style={styles.iconinput}
+              size={20}
+              name="call"
+              color="black"
+            />
+            <TextInput
+              value={phoneNumber}
+              inputMode="tel"
+              onChangeText={(text) => setPhoneNumber(text)}
+              style={styles.textinput}
+              placeholder="Teléfono"
+            />
+          </View>
+        </View>
+        {/* Notas */}
+        <View style={[styles.section]}>
+          <View style={[styles.input, { height: "50%" }]}>
+            <Ionicons
+              style={styles.iconinput}
+              size={20}
+              name="book"
+              color="black"
+            />
+            <TextInput
+              value={notes}
+              onChangeText={(text) => setNotes(text)}
+              style={styles.textinput}
+              placeholder="Notas"
+              multiline
+            />
+          </View>
+        </View>
+        {/* Change Password button */}
+        <TouchableOpacity style={styles.button}>
+          <Ionicons
+            style={styles.iconinput}
+            size={25}
+            name="add"
+            color="white"
+          />
+          <Text style={styles.buttonText}>Agregar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -39,32 +107,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F0F0F0",
   },
-  section: {
-    margin: 10,
-  },
-  label: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: 19,
-  },
-  separator: {
-    height: 2,
-    marginBottom: 20,
-    backgroundColor: "gray",
-    marginVertical: 5,
-  },
-  centeredText: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  value: {
-    justifyContent: "center",
-    fontFamily: "Montserrat-Regular",
-    fontSize: 20,
-  },
   textinput: {
     flex: 1,
     fontFamily: "Montserrat-Regular",
     fontSize: 18,
+    height: "100%",
   },
   input: {
     backgroundColor: "#fff",
@@ -78,14 +125,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
+    flexDirection: "row",
     backgroundColor: "#1A7A13",
     padding: 15,
     borderRadius: 15,
-    alignSelf: "center",
     marginTop: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 30,
   },
   buttonText: {
+    flex: 1,
+    marginLeft: -35,
     color: "white",
+    textAlign: "center",
     fontFamily: "Montserrat-Bold",
     fontSize: 15,
   },
@@ -97,6 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
+    marginBottom: 10,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -130,6 +184,10 @@ const styles = StyleSheet.create({
   },
   iconinput: {
     marginRight: 5,
+  },
+  section: {
+    marginHorizontal: 15,
+    marginBottom: 10,
   },
 });
 

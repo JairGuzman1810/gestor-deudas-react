@@ -1,15 +1,15 @@
 // components/DrawerContent.js
-import React from "react";
-import { useFonts } from "expo-font";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { useFonts } from "expo-font";
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 const DrawerContentUser = (props) => {
-  let [fontsLoaded] = useFonts({
+  const auth = FIREBASE_AUTH;
+  const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../fonts/montserratbold.ttf"),
     "Montserrat-Regular": require("../fonts/montserratregular.ttf"),
   });
@@ -23,6 +23,7 @@ const DrawerContentUser = (props) => {
     // También puedes reiniciar el estado del isAdmin aquí si es necesario.
 
     // Navegar de vuelta a la pantalla de inicio (Login)
+    auth.signOut();
     props.navigation.navigate("Login");
   };
 

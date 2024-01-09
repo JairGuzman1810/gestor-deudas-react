@@ -1,3 +1,5 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   View,
@@ -6,9 +8,6 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import DebtorItem from "../components/DebtorItem";
 
 const Home = () => {
   const navigation = useNavigation();

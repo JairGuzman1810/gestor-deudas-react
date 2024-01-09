@@ -1,8 +1,8 @@
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
+import { ActivityIndicator, Image, StyleSheet, Text } from "react-native";
 import Animated, {
   withTiming,
   useSharedValue,
@@ -19,7 +19,7 @@ const Splashscreen = () => {
     opacity: opacity.value,
   }));
 
-  let [fontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     "Monserrat-Bold": require("../fonts/montserratbold.ttf"),
     "Monserrat-Regular": require("../fonts/montserratregular.ttf"),
   });
@@ -54,7 +54,7 @@ const Splashscreen = () => {
         style={styles.indicator}
         size="large"
         color="#DDD9D9"
-      ></ActivityIndicator>
+      />
     </Animated.View>
   );
 };

@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import Splashscreen from "../views/Splashscreen";
-import Login from "../views/Login";
-import Home from "../views/Home";
+import { NavigationContainer } from "@react-navigation/native";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+
+import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
 import ChangePassword from "../views/ChangePassword";
-import DrawerContentAdmin from "../components/DrawerContentAdmin";
+import Home from "../views/Home";
+import Login from "../views/Login";
 import NewDebtor from "../views/NewDebtor";
+import Splashscreen from "../views/Splashscreen";
 
 const Drawer = createDrawerNavigator();
 

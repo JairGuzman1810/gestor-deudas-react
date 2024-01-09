@@ -1,16 +1,22 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   View,
-  ScrollView,
   Image,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
+
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -18,8 +24,9 @@ const LoginScreen = () => {
   const [hidePass, setHidePass] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  let [fontsLoaded] = useFonts({
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
+  const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../fonts/montserratbold.ttf"),
     "Montserrat-Regular": require("../fonts/montserratregular.ttf"),
   });
@@ -27,8 +34,32 @@ const LoginScreen = () => {
   if (!fontsLoaded) {
     return null;
   }
+
+  const SignIn = async () => {
+    setLoading(true);
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      if (response.user) {
+        // The user is authenticated successfully
+        console.log("Login successful:", response.user);
+        navigation.navigate("Home");
+      } else {
+        // Something unexpected happened, and the user is not authenticated
+        console.log("Unexpected response:", response);
+        Alert.alert("Sign in failed", "Unexpected response. Please try again.");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Sign in failed", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Image
         source={require("../images/logotwins.png")} // Replace with your logo path
         style={styles.logo}
@@ -39,30 +70,31 @@ const LoginScreen = () => {
           <Ionicons
             style={styles.iconinput}
             size={20}
-            name={"mail"}
+            name="mail"
             color="black"
           />
           <TextInput
             style={styles.textinput}
+            inputMode="email"
             value={email}
             onChangeText={(text) => setEmail(text)}
             placeholder="Correo"
-          ></TextInput>
+          />
         </View>
         <View style={styles.input}>
           <Ionicons
             style={styles.iconinput}
             size={20}
-            name={"lock-closed"}
+            name="lock-closed"
             color="black"
           />
           <TextInput
             style={styles.textinput}
             value={password}
             onChangeText={(text) => setPassword(text)}
-            secureTextEntry={hidePass ? true : false}
+            secureTextEntry={!!hidePass}
             placeholder="Contraseña"
-          ></TextInput>
+          />
           <Ionicons
             size={20}
             name={hidePass ? "eye" : "eye-off-sharp"}
@@ -70,14 +102,33 @@ const LoginScreen = () => {
             color="black"
           />
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Home")}
-        >
-          <Text style={styles.buttonText}>LOGIN</Text>
-        </TouchableOpacity>
+        {loading ? (
+          // Show ActivityIndicator when loading is true
+          <ActivityIndicator size="large" color="#4e9316" />
+        ) : (
+          // Show buttons when loading is false
+          <TouchableOpacity
+            disabled={email === "" || password === ""}
+            style={
+              email === "" || password === ""
+                ? styles.buttonDisable
+                : styles.button
+            }
+            onPress={SignIn}
+          >
+            <Text
+              style={
+                email === "" || password === ""
+                  ? styles.buttonTextDisable
+                  : styles.buttonText
+              }
+            >
+              LOGIN
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -136,6 +187,19 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold",
     fontSize: 16,
     color: "#fff",
+  },
+  buttonDisable: {
+    backgroundColor: "#e0e0e0",
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonTextDisable: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: 16,
+    color: "#808080",
   },
   iconinput: {
     marginRight: 5,

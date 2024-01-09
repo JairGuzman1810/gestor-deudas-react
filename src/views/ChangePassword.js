@@ -1,3 +1,5 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
@@ -7,8 +9,6 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
 
 const ChangePassword = () => {
   const navigation = useNavigation();
@@ -49,14 +49,14 @@ const ChangePassword = () => {
           <Ionicons
             style={styles.iconinput}
             size={20}
-            name={"lock-closed"}
+            name="lock-closed"
             color="black"
           />
           <TextInput
             style={styles.textinput}
             value={oldPassword}
             onChangeText={(text) => setOldPassword(text)}
-            secureTextEntry={hideOldPass ? true : false}
+            secureTextEntry={!!hideOldPass}
             placeholder="Contraseña Antigua"
           />
           <Ionicons
@@ -76,14 +76,14 @@ const ChangePassword = () => {
           <Ionicons
             style={styles.iconinput}
             size={20}
-            name={"lock-closed"}
+            name="lock-closed"
             color="black"
           />
           <TextInput
             style={styles.textinput}
             value={newPassword}
             onChangeText={(text) => setNewPassword(text)}
-            secureTextEntry={hideNewPass ? true : false}
+            secureTextEntry={!!hideNewPass}
             placeholder="Nueva Contraseña"
           />
           <Ionicons
@@ -101,14 +101,14 @@ const ChangePassword = () => {
           <Ionicons
             style={styles.iconinput}
             size={20}
-            name={"lock-closed"}
+            name="lock-closed"
             color="black"
           />
           <TextInput
             style={styles.textinput}
             value={repeatPassword}
             onChangeText={(text) => setRepeatPassword(text)}
-            secureTextEntry={hideRepeatPass ? true : false}
+            secureTextEntry={!!hideRepeatPass}
             placeholder="Repetir Contraseña"
           />
           <Ionicons
@@ -146,15 +146,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: "gray",
     marginVertical: 5,
-  },
-  centeredText: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  value: {
-    justifyContent: "center",
-    fontFamily: "Montserrat-Regular",
-    fontSize: 20,
   },
   textinput: {
     flex: 1,
@@ -219,9 +210,6 @@ const styles = StyleSheet.create({
   },
   titlecontainer: {
     flex: 1,
-  },
-  iconButton: {
-    padding: 5,
   },
   iconinput: {
     marginRight: 5,

@@ -6,9 +6,7 @@ const DebtorItem = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.leftcontainer}>
-          <View
-            style={[styles.indicator, { backgroundColor: "#878585" }]}
-          ></View>
+          <View style={[styles.indicator, { backgroundColor: "#878585" }]} />
           <Text style={styles.name}>Deudor</Text>
         </View>
         <View style={styles.rightcontainer}>
