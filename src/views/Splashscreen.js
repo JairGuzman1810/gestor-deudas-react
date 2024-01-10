@@ -10,7 +10,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 
-const Splashscreen = () => {
+const Splashscreen = ({ userLoggedIn }) => {
   const navigation = useNavigation();
 
   const opacity = useSharedValue(0);
@@ -28,7 +28,11 @@ const Splashscreen = () => {
     const timer = setTimeout(() => {
       SplashScreen.hideAsync().then(() => {
         // Navigate to the appropriate screen (e.g., Login or Home)
-        navigation.navigate("Login"); // Replace with the actual screen name
+        if (userLoggedIn) {
+          navigation.navigate("Home");
+        } else {
+          navigation.navigate("Login");
+        }
       });
     }, 3000);
 
@@ -38,7 +42,7 @@ const Splashscreen = () => {
     });
 
     return () => clearTimeout(timer);
-  }, [navigation, opacity]);
+  }, [navigation, opacity, userLoggedIn]); //VERIFICA SI CAMBIA USERLOGGEDIN
 
   if (!fontsLoaded) {
     return null;

@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 
 import DrawerContentAdmin from "../components/DrawerContentAdmin";
@@ -13,9 +13,7 @@ import Splashscreen from "../views/Splashscreen";
 
 const Drawer = createDrawerNavigator();
 
-const Routes = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-
+const Routes = ({ userLoggedIn, setIsAdmin, isAdmin }) => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -32,14 +30,16 @@ const Routes = () => {
       >
         <Drawer.Screen
           name="SplashScreen"
-          component={Splashscreen}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <Splashscreen {...props} userLoggedIn={userLoggedIn} />}
+        </Drawer.Screen>
         <Drawer.Screen
           name="Login"
-          component={Login}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <Login {...props} setIsAdmin={setIsAdmin} />}
+        </Drawer.Screen>
         <Drawer.Screen
           name="Home"
           component={Home}

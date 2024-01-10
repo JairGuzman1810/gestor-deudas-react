@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { get, ref } from "firebase/database";
 import React, { useState } from "react";
 import {
   View,
@@ -16,9 +17,9 @@ import {
   Alert,
 } from "react-native";
 
-import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { FIREBASE_AUTH, FIREBASE_DATABASE } from "../../firebaseConfig";
 
-const LoginScreen = () => {
+const Login = ({ setIsAdmin }) => {
   const navigation = useNavigation();
 
   const [hidePass, setHidePass] = useState(true);
@@ -42,6 +43,18 @@ const LoginScreen = () => {
       if (response.user) {
         // The user is authenticated successfully
         //TODO console.log("Login successful:", response.user);
+        const db = FIREBASE_DATABASE;
+        const userRef = ref(db, `Usuarios/${response.user.uid}`);
+        const snapshot = await get(userRef);
+
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          //console.log("User data:", userData);
+          // Check if user has admin privileges
+          setIsAdmin(userData.privilegios === "admin");
+        } else {
+          console.log("User data not found"); //
+        }
         navigation.navigate("Home");
       } else {
         // Something unexpected happened, and the user is not authenticated
@@ -206,4 +219,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Login;
