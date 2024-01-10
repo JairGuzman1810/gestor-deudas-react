@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 70,
+    height: 65,
   },
   leftcontainer: {
     flexDirection: "row",
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rightcontainer: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "flex-end", // Align to the right edge
     justifyContent: "flex-end", // Align to the bottom

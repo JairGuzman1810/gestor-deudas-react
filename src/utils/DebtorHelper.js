@@ -72,6 +72,8 @@ export const getAllDebtors = (setDebtors) => {
 
       if (debtors) {
         setDebtors(debtors);
+      } else {
+        setDebtors({});
       }
     });
 
