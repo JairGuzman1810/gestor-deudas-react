@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 
@@ -19,11 +20,14 @@ const Home = () => {
   const [isSearching, setIsSerching] = useState(false);
   const [totalDebt, setTotalDebt] = useState(0);
   const [search, setSearch] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Set up the real-time listener and get the unsubscribe function
-    const unsubscribe = getAllDebtors(setDebtors);
-
+    const unsubscribe = getAllDebtors((debtors) => {
+      setDebtors(debtors);
+      setIsLoading(false);
+    });
     // Clean up the listener when the component unmounts
     return () => {
       if (unsubscribe) {
@@ -56,6 +60,8 @@ const Home = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      {/* HEADER */}
+
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity
@@ -114,6 +120,7 @@ const Home = () => {
           <Ionicons name="filter" size={28} color="white" />
         </TouchableOpacity>
       </View>
+      {/* BARRA DE BUSQUEDA */}
       {isSearching && (
         <View style={styles.input}>
           <TextInput
@@ -125,27 +132,39 @@ const Home = () => {
           />
         </View>
       )}
-      {Object.values(debtors).length === 0 && !isSearching ? (
-        <View style={styles.noDebtorsContainer}>
-          <Text style={styles.noDebtorsText}>
-            Sin deudores. Haga su primer deudor con el icono
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("NewDebtor")}>
-            <Ionicons name="person-add" size={28} color="black" />
-          </TouchableOpacity>
-        </View>
-      ) : filteredDebtors.length === 0 ? (
-        <View style={styles.noDebtorsContainer}>
-          <Text style={styles.noDebtorsText}>Sin registros con el nombre:</Text>
-          <Text style={styles.noDebtorsText}>"{search}"</Text>
-        </View>
+      {/* LISTA DE DEUDORES */}
+      {isLoading ? (
+        <ActivityIndicator style={{ flex: 1 }} size="large" color="#808080" />
       ) : (
-        <FlatList
-          data={isSearching ? filteredDebtors : Object.values(debtors)}
-          keyExtractor={(item) => item.uid}
-          renderItem={({ item }) => <DebtorItem debtor={item} />}
-        />
+        <>
+          {Object.values(debtors).length === 0 && !isSearching ? (
+            <View style={styles.noDebtorsContainer}>
+              <Text style={styles.noDebtorsText}>
+                Sin deudores. Haga su primer deudor con el icono
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("NewDebtor")}
+              >
+                <Ionicons name="person-add" size={28} color="black" />
+              </TouchableOpacity>
+            </View>
+          ) : filteredDebtors.length === 0 ? (
+            <View style={styles.noDebtorsContainer}>
+              <Text style={styles.noDebtorsText}>
+                Sin registros con el nombre:
+              </Text>
+              <Text style={styles.noDebtorsText}>"{search}"</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={isSearching ? filteredDebtors : Object.values(debtors)}
+              keyExtractor={(item) => item.uid}
+              renderItem={({ item }) => <DebtorItem debtor={item} />}
+            />
+          )}
+        </>
       )}
+      {/* FOOTER */}
       <View style={styles.totaldebtcontainer}>
         <View style={styles.leftTextContainer}>
           <Text style={styles.leftText}>Deuda total:</Text>
