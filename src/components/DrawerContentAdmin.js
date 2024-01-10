@@ -7,6 +7,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 const DrawerContentAdmin = (props) => {
+  const { user } = props; // Obtén el objeto de usuario de las propiedades
   const auth = FIREBASE_AUTH;
   const [fontsLoaded] = useFonts({
     "Montserrat-Bold": require("../fonts/montserratbold.ttf"),
@@ -40,9 +41,9 @@ const DrawerContentAdmin = (props) => {
             source={require("../images/logotwins.png")}
           />
         </View>
-        <Text style={styles.userinfo}>Usuario Prueba</Text>
+        <Text style={styles.userinfo}>{user.nombre}</Text>
         <Text style={[styles.userinfo, { marginBottom: 10 }]}>
-          jairguzman@igrtec.com
+          {user.correo}
         </Text>
       </View>
       {/* Container para Cambiar Contraseña y Cerrar Sesión */}

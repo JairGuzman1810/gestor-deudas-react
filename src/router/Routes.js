@@ -13,17 +13,22 @@ import Splashscreen from "../views/Splashscreen";
 
 const Drawer = createDrawerNavigator();
 
-const Routes = ({ userLoggedIn, setIsAdmin, isAdmin }) => {
+const Routes = ({ userLoggedIn, setUser, user }) => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
         //Se tiene que condicionar con el return, ya que si no, sale en blanco
         drawerContent={(props) => {
-          return isAdmin ? (
-            <DrawerContentAdmin {...props} />
-          ) : (
-            <DrawerContentUser {...props} />
-          );
+          if (userLoggedIn && user && user.privilegios === "admin") {
+            // User is logged in and has admin privileges
+            return <DrawerContentAdmin user={user} {...props} />;
+          } else if (userLoggedIn && user) {
+            // User is logged in but not an admin
+            return <DrawerContentUser user={user} {...props} />;
+          } else {
+            // User is not logged in
+            return null; // or any other default drawer content
+          }
         }}
         styles={styles.container}
         initialRouteName="SplashScreen"
@@ -38,7 +43,7 @@ const Routes = ({ userLoggedIn, setIsAdmin, isAdmin }) => {
           name="Login"
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         >
-          {(props) => <Login {...props} setIsAdmin={setIsAdmin} />}
+          {(props) => <Login {...props} setUser={setUser} />}
         </Drawer.Screen>
         <Drawer.Screen
           name="Home"
