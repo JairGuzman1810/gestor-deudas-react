@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { fetchUser } from "../utils/UserHelpers";
@@ -60,77 +61,81 @@ const Login = ({ setUser }) => {
   };
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Image
-        source={require("../images/logotwins.png")} // Replace with your logo path
-        style={styles.logo}
-      />
-      <View style={styles.cardContainer}>
-        <Text style={styles.title}>Inicio de sesión</Text>
-        <View style={styles.input}>
-          <Ionicons
-            style={styles.iconinput}
-            size={20}
-            name="mail"
-            color="black"
+      <ScrollView>
+        <View>
+          <Image
+            source={require("../images/logotwins.png")} // Replace with your logo path
+            style={styles.logo}
           />
-          <TextInput
-            style={styles.textinput}
-            inputMode="email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            placeholder="Correo"
-          />
+          <View style={styles.cardContainer}>
+            <Text style={styles.title}>Inicio de sesión</Text>
+            <View style={styles.input}>
+              <Ionicons
+                style={styles.iconinput}
+                size={20}
+                name="mail"
+                color="black"
+              />
+              <TextInput
+                style={styles.textinput}
+                inputMode="email"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholder="Correo"
+              />
+            </View>
+            <View style={styles.input}>
+              <Ionicons
+                style={styles.iconinput}
+                size={20}
+                name="lock-closed"
+                color="black"
+              />
+              <TextInput
+                style={styles.textinput}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry={!!hidePass}
+                placeholder="Contraseña"
+              />
+              <Ionicons
+                size={20}
+                name={hidePass ? "eye" : "eye-off-sharp"}
+                onPress={() => setHidePass(!hidePass)}
+                color="black"
+              />
+            </View>
+            {loading ? (
+              // Show ActivityIndicator when loading is true
+              <ActivityIndicator size="large" color="#4e9316" />
+            ) : (
+              // Show buttons when loading is false
+              <TouchableOpacity
+                disabled={email === "" || password === ""}
+                style={
+                  email === "" || password === ""
+                    ? styles.buttonDisable
+                    : styles.button
+                }
+                onPress={SignIn}
+              >
+                <Text
+                  style={
+                    email === "" || password === ""
+                      ? styles.buttonTextDisable
+                      : styles.buttonText
+                  }
+                >
+                  LOGIN
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-        <View style={styles.input}>
-          <Ionicons
-            style={styles.iconinput}
-            size={20}
-            name="lock-closed"
-            color="black"
-          />
-          <TextInput
-            style={styles.textinput}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={!!hidePass}
-            placeholder="Contraseña"
-          />
-          <Ionicons
-            size={20}
-            name={hidePass ? "eye" : "eye-off-sharp"}
-            onPress={() => setHidePass(!hidePass)}
-            color="black"
-          />
-        </View>
-        {loading ? (
-          // Show ActivityIndicator when loading is true
-          <ActivityIndicator size="large" color="#4e9316" />
-        ) : (
-          // Show buttons when loading is false
-          <TouchableOpacity
-            disabled={email === "" || password === ""}
-            style={
-              email === "" || password === ""
-                ? styles.buttonDisable
-                : styles.button
-            }
-            onPress={SignIn}
-          >
-            <Text
-              style={
-                email === "" || password === ""
-                  ? styles.buttonTextDisable
-                  : styles.buttonText
-              }
-            >
-              LOGIN
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };

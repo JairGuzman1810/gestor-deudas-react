@@ -61,7 +61,6 @@ const Home = () => {
   return (
     <View style={styles.container}>
       {/* HEADER */}
-
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity

@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Platform, Alert } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+
+import DebtorModal from "./DebtorModal";
 
 const DebtorItem = ({ debtor }) => {
   const [isHeld, setIsHeld] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handlePress = () => {
     Alert.alert("PRESS");
@@ -11,42 +20,17 @@ const DebtorItem = ({ debtor }) => {
 
   const handleLongPress = () => {
     setIsHeld(true);
-    // Mostrar un Alert personalizado con opciones
-    //TODO CAMBIAR A UNO PERSONALIZADO
-    Alert.alert(
-      `Deudor "${debtor.nombre}" seleccionado.`,
-      "¿Qué acción desea realizar?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-          onPress: () => {
-            setIsHeld(false);
-          },
-        },
-        {
-          text: "Editar",
-          onPress: () => {
-            // Lógica para editar
-            setIsHeld(false);
-          },
-        },
-        {
-          text: "Eliminar",
-          onPress: () => {
-            // Lógica para eliminar
-            setIsHeld(false);
-          },
-          style: "destructive",
-        },
-      ],
-      // eslint-disable-next-line prettier/prettier
-      { cancelable: false }
-    );
+    setIsModalVisible(true);
   };
+
+  const hideModal = () => {
+    setIsModalVisible(false);
+  };
+
   const handlePressOut = () => {
     if (isHeld) {
       setIsHeld(false);
+      // Show the modal when releasing the long press
     }
   };
 
@@ -60,6 +44,7 @@ const DebtorItem = ({ debtor }) => {
         onPress={handlePress}
         onLongPress={handleLongPress}
         onPressOut={handlePressOut}
+        delayLongPress={500} // Adjust the delay as needed
       >
         <View style={styles.leftcontainer}>
           <View
@@ -68,10 +53,10 @@ const DebtorItem = ({ debtor }) => {
               {
                 backgroundColor:
                   debtor.deudaindividual === 0
-                    ? "#30BFBF" // Color para deudaindividual igual a 0
+                    ? "#30BFBF"
                     : debtor.deudaindividual > 0
-                      ? "#1A7A13" // Color para deudaindividual mayor a 0
-                      : "#B11D1D", // Color para deudaindividual menor a 0
+                      ? "#1A7A13"
+                      : "#B11D1D",
               },
             ]}
           />
@@ -85,10 +70,10 @@ const DebtorItem = ({ debtor }) => {
                 {
                   color:
                     debtor.deudaindividual === 0
-                      ? "#30BFBF" // Color para deudaindividual igual a 0
+                      ? "#30BFBF"
                       : debtor.deudaindividual > 0
-                        ? "#1A7A13" // Color para deudaindividual mayor a 0
-                        : "#B11D1D", // Color para deudaindividual menor a 0
+                        ? "#1A7A13"
+                        : "#B11D1D",
                 },
               ]}
             >
@@ -106,6 +91,11 @@ const DebtorItem = ({ debtor }) => {
           </View>
         </View>
       </TouchableOpacity>
+      <DebtorModal
+        debtor={debtor}
+        isModalVisible={isModalVisible}
+        hideModal={hideModal}
+      />
     </View>
   );
 };
@@ -176,5 +166,46 @@ const styles = StyleSheet.create({
     color: "#878585",
     fontSize: 10,
     marginBottom: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 20,
+  },
+  title: {
+    fontFamily: "Montserrat-Bold",
+    textAlign: "center",
+    color: "black",
+    fontSize: 20,
+    marginTop: 25,
+  },
+  button: {
+    backgroundColor: "#1A7A13",
+    borderRadius: 5,
+    marginTop: 40,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    padding: 15,
+    alignItems: "center",
+  },
+  deleteButton: {
+    backgroundColor: "#B11D1D",
+    borderRadius: 5,
+    marginHorizontal: 20,
+    marginBottom: 25,
+    padding: 15,
+    alignItems: "center",
+  },
+  buttonText: {
+    fontFamily: "Montserrat-Bold",
+    color: "white",
+    fontSize: 15,
   },
 });
