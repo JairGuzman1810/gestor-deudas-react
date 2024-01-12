@@ -1,21 +1,22 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Platform,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 
 import DebtorModal from "./DebtorModal";
 
 const DebtorItem = ({ debtor }) => {
+  const navigation = useNavigation();
   const [isHeld, setIsHeld] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handlePress = () => {
-    Alert.alert("PRESS");
+    navigation.navigate("DetailDebtor");
   };
 
   const handleLongPress = () => {
@@ -25,13 +26,7 @@ const DebtorItem = ({ debtor }) => {
 
   const hideModal = () => {
     setIsModalVisible(false);
-  };
-
-  const handlePressOut = () => {
-    if (isHeld) {
-      setIsHeld(false);
-      // Show the modal when releasing the long press
-    }
+    setIsHeld(false);
   };
 
   return (
@@ -43,7 +38,6 @@ const DebtorItem = ({ debtor }) => {
         activeOpacity={0.5}
         onPress={handlePress}
         onLongPress={handleLongPress}
-        onPressOut={handlePressOut}
         delayLongPress={500} // Adjust the delay as needed
       >
         <View style={styles.leftcontainer}>
@@ -95,6 +89,7 @@ const DebtorItem = ({ debtor }) => {
         debtor={debtor}
         isModalVisible={isModalVisible}
         hideModal={hideModal}
+        setIsHeld={setIsHeld}
       />
     </View>
   );

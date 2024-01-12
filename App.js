@@ -44,7 +44,12 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Pasa la información relevante a través de las propiedades */}
-      <Routes userLoggedIn={userLoggedIn} user={user} setUser={setUser} />
+      <Routes
+        userLoggedIn={userLoggedIn}
+        user={user}
+        setUser={setUser}
+        setUserLoggedIn={setUserLoggedIn}
+      />
     </SafeAreaView>
   );
 }

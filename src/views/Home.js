@@ -28,7 +28,7 @@ const Home = () => {
 
   useEffect(() => {
     // Set up the real-time listener and get the unsubscribe function
-    const unsubscribe = getAllDebtors((debtors) => {
+    getAllDebtors((debtors) => {
       const debtorsArray = Object.values(debtors);
       // Handle the sorting logic based on the selected option
       const sortedDebtors = [...debtorsArray];
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
       },
       android: {
-        elevation: 5,
+        elevation: 10,
       },
     }),
   },
@@ -291,6 +291,8 @@ const styles = StyleSheet.create({
   },
   totaldebtcontainer: {
     height: 50,
+    borderColor: "#000",
+    marginTop: 1,
     backgroundColor: "#fdfdfd",
     borderTopRightRadius: 25,
     flexDirection: "row",
@@ -362,6 +364,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     marginBottom: 10,
+  },
+  touchableOpacity: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
   },
 });
 

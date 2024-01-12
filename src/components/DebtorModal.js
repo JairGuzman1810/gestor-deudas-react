@@ -1,6 +1,13 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Platform,
+} from "react-native";
 
 const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
   return (
@@ -20,14 +27,22 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
           <Text style={styles.title}>
             {`Deudor "${debtor.nombre}" seleccionado.`}
           </Text>
-
-          <TouchableOpacity onPress={hideModal} style={styles.button}>
-            <Text style={styles.buttonText}>Editar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={hideModal} style={styles.deleteButton}>
-            <Text style={styles.buttonText}>Eliminar</Text>
-          </TouchableOpacity>
+          <View style={styles.button}>
+            <TouchableOpacity
+              onPress={hideModal}
+              style={styles.touchableOpacity}
+            >
+              <Text style={styles.buttonText}>Editar</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.deleteButton}>
+            <TouchableOpacity
+              onPress={hideModal}
+              style={styles.touchableOpacity}
+            >
+              <Text style={styles.buttonText}>Eliminar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -56,25 +71,48 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#1A7A13",
-    borderRadius: 5,
-    marginTop: 40,
+    marginTop: 20,
     marginHorizontal: 20,
     marginBottom: 20,
-    padding: 15,
     alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 4 }, // Adjust the offset if needed
+        shadowOpacity: 0.5, // Increase the opacity for a more visible shadow
+        shadowRadius: 6, // Adjust the radius if needed
+      },
+      android: {
+        elevation: 8, // Increase the elevation for a more visible shadow
+      },
+    }),
   },
   deleteButton: {
     backgroundColor: "#B11D1D",
-    borderRadius: 5,
     marginHorizontal: 20,
     marginBottom: 25,
-    padding: 15,
     alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 4 }, // Adjust the offset if needed
+        shadowOpacity: 0.5, // Increase the opacity for a more visible shadow
+        shadowRadius: 6, // Adjust the radius if needed
+      },
+      android: {
+        elevation: 8, // Increase the elevation for a more visible shadow
+      },
+    }),
   },
   buttonText: {
     fontFamily: "Montserrat-Bold",
     color: "white",
     fontSize: 15,
+  },
+  touchableOpacity: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
   },
 });
 

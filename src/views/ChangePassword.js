@@ -142,9 +142,9 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   separator: {
-    height: 2,
+    height: 1,
     marginBottom: 20,
-    backgroundColor: "gray",
+    backgroundColor: "#878585",
     marginVertical: 5,
   },
   textinput: {

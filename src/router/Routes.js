@@ -6,6 +6,7 @@ import { StyleSheet } from "react-native";
 import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
 import ChangePassword from "../views/ChangePassword";
+import DetailDebtor from "../views/DetailDebtor";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import NewDebtor from "../views/NewDebtor";
@@ -13,7 +14,7 @@ import Splashscreen from "../views/Splashscreen";
 
 const Drawer = createDrawerNavigator();
 
-const Routes = ({ userLoggedIn, setUser, user }) => {
+const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
@@ -43,7 +44,13 @@ const Routes = ({ userLoggedIn, setUser, user }) => {
           name="Login"
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         >
-          {(props) => <Login {...props} setUser={setUser} />}
+          {(props) => (
+            <Login
+              {...props}
+              setUser={setUser}
+              setUserLoggedIn={setUserLoggedIn}
+            />
+          )}
         </Drawer.Screen>
         <Drawer.Screen
           name="Home"
@@ -58,6 +65,11 @@ const Routes = ({ userLoggedIn, setUser, user }) => {
         <Drawer.Screen
           name="NewDebtor"
           component={NewDebtor}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="DetailDebtor"
+          component={DetailDebtor}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>

@@ -20,7 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { fetchUser } from "../utils/UserHelpers";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser, setUserLoggedIn }) => {
   const navigation = useNavigation();
 
   const [hidePass, setHidePass] = useState(true);
@@ -46,6 +46,7 @@ const Login = ({ setUser }) => {
         //TODO console.log("Login successful:", response.user);
         const userData = await fetchUser(response.user);
         setUser(userData);
+        setUserLoggedIn(true);
         navigation.navigate("Home");
       } else {
         // Something unexpected happened, and the user is not authenticated
@@ -113,25 +114,29 @@ const Login = ({ setUser }) => {
               <ActivityIndicator size="large" color="#4e9316" />
             ) : (
               // Show buttons when loading is false
-              <TouchableOpacity
-                disabled={email === "" || password === ""}
+              <View
                 style={
                   email === "" || password === ""
                     ? styles.buttonDisable
                     : styles.button
                 }
-                onPress={SignIn}
               >
-                <Text
-                  style={
-                    email === "" || password === ""
-                      ? styles.buttonTextDisable
-                      : styles.buttonText
-                  }
+                <TouchableOpacity
+                  disabled={email === "" || password === ""}
+                  onPress={SignIn}
+                  style={styles.touchableOpacity}
                 >
-                  LOGIN
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={
+                      email === "" || password === ""
+                        ? styles.buttonTextDisable
+                        : styles.buttonText
+                    }
+                  >
+                    LOGIN
+                  </Text>
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         </View>
@@ -185,7 +190,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#4e9316",
-    padding: 15,
     borderRadius: 5,
     marginTop: 20,
     justifyContent: "center",
@@ -198,7 +202,6 @@ const styles = StyleSheet.create({
   },
   buttonDisable: {
     backgroundColor: "#e0e0e0",
-    padding: 15,
     borderRadius: 5,
     marginTop: 20,
     justifyContent: "center",
@@ -211,6 +214,12 @@ const styles = StyleSheet.create({
   },
   iconinput: {
     marginRight: 5,
+  },
+  touchableOpacity: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
   },
 });
 
