@@ -13,6 +13,7 @@ import {
 import { FlatList, TextInput } from "react-native-gesture-handler";
 
 import DebtorItem from "../components/DebtorItem";
+import SortModal from "../components/SortModal";
 import { getAllDebtors } from "../utils/DebtorHelper";
 
 const Home = () => {
@@ -21,20 +22,58 @@ const Home = () => {
   const [totalDebt, setTotalDebt] = useState(0);
   const [search, setSearch] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [sortingOrder, setSortingOrder] = useState("Asc");
+  const [selectedOption, setSelectedOption] = useState("Fecha de creación");
 
   useEffect(() => {
     // Set up the real-time listener and get the unsubscribe function
     const unsubscribe = getAllDebtors((debtors) => {
-      setDebtors(debtors);
+      const debtorsArray = Object.values(debtors);
+      // Handle the sorting logic based on the selected option
+      const sortedDebtors = [...debtorsArray];
+
+      switch (selectedOption) {
+        case "Alfabeticamente":
+          sortedDebtors.sort((a, b) =>
+            sortingOrder === "Asc"
+              ? a.nombre.localeCompare(b.nombre)
+              : b.nombre.localeCompare(a.nombre)
+          );
+          break;
+        case "Fecha del movimiento":
+          sortedDebtors.sort((a, b) =>
+            sortingOrder === "Asc"
+              ? a.ultimomovimiento - b.ultimomovimiento
+              : b.ultimomovimiento - a.ultimomovimiento
+          );
+          break;
+        case "Fecha de creación":
+          sortedDebtors.sort((a, b) =>
+            sortingOrder === "Asc" ? a.creado - b.creado : b.creado - a.creado
+          );
+          break;
+        case "Deuda":
+          sortedDebtors.sort((a, b) =>
+            sortingOrder === "Asc"
+              ? a.deudaindividual - b.deudaindividual
+              : b.deudaindividual - a.deudaindividual
+          );
+          break;
+        default:
+          break;
+      }
+
+      // Convert the sorted array back to an object
+      const sortedDebtorsObject = {};
+      sortedDebtors.forEach((debtor) => {
+        sortedDebtorsObject[debtor.uid] = debtor;
+      });
+
+      setDebtors(sortedDebtorsObject);
       setIsLoading(false);
     });
-    // Clean up the listener when the component unmounts
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, []); // El array vacío [] significa que se ejecutará solo una vez
+  }, [selectedOption, sortingOrder]); // El array vacío [] significa que se ejecutará solo una vez
 
   useEffect(() => {
     // Calculate the total debt whenever debtors change
@@ -52,6 +91,10 @@ const Home = () => {
       setSearch("");
     }
   }, [isSearching]);
+
+  const hideModal = () => {
+    setIsModalVisible(false);
+  };
 
   const filteredDebtors = Object.values(debtors).filter((debtor) =>
     debtor.nombre.toLowerCase().includes(search.toLowerCase())
@@ -114,6 +157,7 @@ const Home = () => {
           style={styles.iconButton}
           onPress={() => {
             /* Handle cancel button press */
+            setIsModalVisible(true);
           }}
         >
           <Ionicons name="filter" size={28} color="white" />
@@ -186,6 +230,16 @@ const Home = () => {
           </Text>
         </View>
       </View>
+      <SortModal
+        isModalVisible={isModalVisible}
+        hideModal={hideModal}
+        setDebtors={setDebtors}
+        debtors={debtors}
+        sortingOrder={sortingOrder}
+        setSortingOrder={setSortingOrder}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+      />
     </View>
   );
 };
