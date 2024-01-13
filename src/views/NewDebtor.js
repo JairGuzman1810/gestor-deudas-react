@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -8,6 +9,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  ToastAndroid,
+  Alert,
 } from "react-native";
 
 import { addDebtor } from "../utils/DebtorHelper";
@@ -22,15 +25,50 @@ const NewDebtor = () => {
     navigation.navigate("Home");
   };
   const handleAddDebtor = async () => {
-    await addDebtor(
-      name,
-      phoneNumber,
-      notes,
-      setName,
-      setPhoneNumber,
-      // eslint-disable-next-line prettier/prettier
-      setNotes
-    );
+    try {
+      const result = await addDebtor(name, phoneNumber, notes);
+      if (result) {
+        console.log("Debtor added successfully");
+
+        if (Platform.OS === "android") {
+          ToastAndroid.show("Deudor agregado.", ToastAndroid.SHORT);
+        } else {
+          Alert.alert("Deudor agregado.");
+        }
+
+        // Clear the fields after successful insertion
+        setName("");
+        setPhoneNumber("");
+        setNotes("");
+      } else {
+        console.log("Update failed");
+
+        // Display error message for failure
+        if (Platform.OS === "android") {
+          ToastAndroid.show(
+            "Error al agregar deudor. Inténtelo de nuevo.",
+            ToastAndroid.LONG
+          );
+        } else {
+          Alert.alert(
+            "Error",
+            "No se pudo agregar al deudor. Por favor, inténtelo de nuevo."
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+
+      // Handle errors with Toast or Alert
+      if (Platform.OS === "android") {
+        ToastAndroid.show("Error al agregar deudor.", ToastAndroid.LONG);
+      } else {
+        Alert.alert(
+          "Error",
+          "No se pudo agregar al deudor. Por favor, inténtelo de nuevo."
+        );
+      }
+    }
   };
 
   return (
@@ -45,81 +83,79 @@ const NewDebtor = () => {
           <Text style={styles.title}>Nuevo deudor</Text>
         </View>
       </View>
-      <View style={styles.content}>
-        {/* Nombre */}
-        <View style={styles.section}>
-          <View style={styles.input}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="person"
-              color="black"
-            />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={styles.textinput}
-              placeholder="Nombre"
-            />
-          </View>
+      {/* Nombre */}
+      <View style={styles.section}>
+        <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="person"
+            color="black"
+          />
+          <TextInput
+            value={name}
+            onChangeText={(text) => setName(text)}
+            style={styles.textinput}
+            placeholder="Nombre"
+          />
         </View>
-        {/* Telefono */}
-        <View style={styles.section}>
-          <View style={styles.input}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="call"
-              color="black"
-            />
-            <TextInput
-              value={phoneNumber}
-              inputMode="tel"
-              onChangeText={(text) => setPhoneNumber(text)}
-              style={styles.textinput}
-              placeholder="Teléfono"
-            />
-          </View>
+      </View>
+      {/* Telefono */}
+      <View style={styles.section}>
+        <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="call"
+            color="black"
+          />
+          <TextInput
+            value={phoneNumber}
+            inputMode="tel"
+            onChangeText={(text) => setPhoneNumber(text)}
+            style={styles.textinput}
+            placeholder="Teléfono"
+          />
         </View>
-        {/* Notas */}
-        <View style={[styles.section]}>
-          <View style={[styles.input, { height: "50%" }]}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="book"
-              color="black"
-            />
-            <TextInput
-              value={notes}
-              onChangeText={(text) => setNotes(text)}
-              style={styles.textinput}
-              placeholder="Notas"
-              multiline
-            />
-          </View>
+      </View>
+      {/* Notas */}
+      <View style={[styles.section]}>
+        <View style={[styles.input, { height: "50%" }]}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="book"
+            color="black"
+          />
+          <TextInput
+            value={notes}
+            onChangeText={(text) => setNotes(text)}
+            style={styles.textinput}
+            placeholder="Notas"
+            multiline
+          />
         </View>
-        {/* Change Password button */}
+      </View>
+      {/* Change Password button */}
 
-        <View style={name === "" ? styles.buttonDisable : styles.button}>
-          <TouchableOpacity
-            style={styles.touchableOpacity}
-            disabled={name === ""}
-            onPress={handleAddDebtor}
+      <View style={name === "" ? styles.buttonDisable : styles.button}>
+        <TouchableOpacity
+          style={styles.touchableOpacity}
+          disabled={name === ""}
+          onPress={handleAddDebtor}
+        >
+          <Ionicons
+            style={styles.iconinput}
+            size={25}
+            name="add"
+            color={name === "" ? "#808080" : "white"}
+          />
+          <Text
+            style={name === "" ? styles.buttonTextDisable : styles.buttonText}
           >
-            <Ionicons
-              style={styles.iconinput}
-              size={25}
-              name="add"
-              color={name === "" ? "#808080" : "white"}
-            />
-            <Text
-              style={name === "" ? styles.buttonTextDisable : styles.buttonText}
-            >
-              Agregar
-            </Text>
-          </TouchableOpacity>
-        </View>
+            Agregar
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -130,6 +166,43 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "android" ? 30 : 0, // Apply marginTop only on Android
     flex: 1,
     backgroundColor: "#F0F0F0",
+  },
+  header: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#808080",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  toolbarContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  toolbarButton: {
+    marginRight: 10,
+  },
+  titlecontainer: {
+    flex: 1,
+  },
+  title: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
   },
   textinput: {
     flex: 1,
@@ -203,43 +276,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "Montserrat-Bold",
     fontSize: 15,
-  },
-  header: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#808080",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: "black",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  toolbarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  toolbarButton: {
-    marginRight: 10,
-  },
-  title: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: 18,
-    color: "white",
-    textAlign: "center",
-  },
-  titlecontainer: {
-    flex: 1,
   },
   iconButton: {
     padding: 5,

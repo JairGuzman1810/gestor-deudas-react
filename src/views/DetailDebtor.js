@@ -55,6 +55,14 @@ const DetailDebtor = ({ route }) => {
     }
   };
 
+  const newPayment = () => {
+    navigation.navigate("NewMovement", { debtor, isPayment: true });
+  };
+
+  const newDebt = () => {
+    navigation.navigate("NewMovement", { debtor, isPayment: false });
+  };
+
   return (
     <View style={styles.container}>
       {/* HEADER */}
@@ -142,12 +150,15 @@ const DetailDebtor = ({ route }) => {
             </Text>
           </View>
           <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              onPress={newPayment}
+              style={styles.touchableOpacity}
+            >
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.button, { backgroundColor: "#B11D1D" }]}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity onPress={newDebt} style={styles.touchableOpacity}>
               <Text style={styles.buttonText}>-</Text>
             </TouchableOpacity>
           </View>
@@ -172,12 +183,18 @@ const DetailDebtor = ({ route }) => {
               </Text>
               <View style={styles.noMovementsButtons}>
                 <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
-                  <TouchableOpacity style={styles.touchableOpacity}>
+                  <TouchableOpacity
+                    onPress={newPayment}
+                    style={styles.touchableOpacity}
+                  >
                     <Text style={styles.buttonText}>+</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={[styles.button, { backgroundColor: "#B11D1D" }]}>
-                  <TouchableOpacity style={styles.touchableOpacity}>
+                  <TouchableOpacity
+                    onPress={newDebt}
+                    style={styles.touchableOpacity}
+                  >
                     <Text style={styles.buttonText}>-</Text>
                   </TouchableOpacity>
                 </View>

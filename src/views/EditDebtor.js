@@ -79,9 +79,35 @@ const EditDebtor = ({ route }) => {
         }
       } else {
         console.log("Update failed");
+
+        // Display error message for failure
+        if (Platform.OS === "android") {
+          ToastAndroid.show(
+            "Error al actualizar la información del deudor. Inténtelo de nuevo.",
+            ToastAndroid.LONG
+          );
+        } else {
+          Alert.alert(
+            "Error",
+            "No se pudo actualizar la información del deudor. Por favor, inténtelo de nuevo."
+          );
+        }
       }
     } catch (error) {
       console.error("Error updating debtor:", error);
+
+      // Handle errors with Toast or Alert
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "Error al actualizar la información del deudor. Inténtelo de nuevo.",
+          ToastAndroid.LONG
+        );
+      } else {
+        Alert.alert(
+          "Error",
+          "No se pudo actualizar la información del deudor. Por favor, inténtelo de nuevo."
+        );
+      }
     }
   };
 
@@ -97,80 +123,78 @@ const EditDebtor = ({ route }) => {
           <Text style={styles.title}>Editar deudor</Text>
         </View>
       </View>
-      <View style={styles.content}>
-        {/* Nombre */}
-        <View style={styles.section}>
-          <View style={styles.input}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="person"
-              color="black"
-            />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={styles.textinput}
-              placeholder="Nombre"
-            />
-          </View>
+      {/* Nombre */}
+      <View style={styles.section}>
+        <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="person"
+            color="black"
+          />
+          <TextInput
+            value={name}
+            onChangeText={(text) => setName(text)}
+            style={styles.textinput}
+            placeholder="Nombre"
+          />
         </View>
-        {/* Telefono */}
-        <View style={styles.section}>
-          <View style={styles.input}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="call"
-              color="black"
-            />
-            <TextInput
-              value={phoneNumber}
-              inputMode="tel"
-              onChangeText={(text) => setPhoneNumber(text)}
-              style={styles.textinput}
-              placeholder="Teléfono"
-            />
-          </View>
+      </View>
+      {/* Telefono */}
+      <View style={styles.section}>
+        <View style={styles.input}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="call"
+            color="black"
+          />
+          <TextInput
+            value={phoneNumber}
+            inputMode="tel"
+            onChangeText={(text) => setPhoneNumber(text)}
+            style={styles.textinput}
+            placeholder="Teléfono"
+          />
         </View>
-        {/* Notas */}
-        <View style={[styles.section]}>
-          <View style={[styles.input, { height: "50%" }]}>
-            <Ionicons
-              style={styles.iconinput}
-              size={20}
-              name="book"
-              color="black"
-            />
-            <TextInput
-              value={notes}
-              onChangeText={(text) => setNotes(text)}
-              style={styles.textinput}
-              placeholder="Notas"
-              multiline
-            />
-          </View>
+      </View>
+      {/* Notas */}
+      <View style={[styles.section]}>
+        <View style={[styles.input, { height: "50%" }]}>
+          <Ionicons
+            style={styles.iconinput}
+            size={20}
+            name="book"
+            color="black"
+          />
+          <TextInput
+            value={notes}
+            onChangeText={(text) => setNotes(text)}
+            style={styles.textinput}
+            placeholder="Notas"
+            multiline
+          />
         </View>
-        {/* Change Password button */}
-        <View style={name === "" ? styles.buttonDisable : styles.button}>
-          <TouchableOpacity
-            style={styles.touchableOpacity}
-            disabled={name === ""}
-            onPress={handleUpdateDebtor}
+      </View>
+      {/* Change Password button */}
+      <View style={name === "" ? styles.buttonDisable : styles.button}>
+        <TouchableOpacity
+          style={styles.touchableOpacity}
+          disabled={name === ""}
+          onPress={handleUpdateDebtor}
+        >
+          <Ionicons
+            style={styles.iconinput}
+            size={25}
+            name="pencil-sharp"
+            color={name === "" ? "#808080" : "white"}
+          />
+          <Text
+            style={name === "" ? styles.buttonTextDisable : styles.buttonText}
           >
-            <Ionicons
-              style={styles.iconinput}
-              size={25}
-              name="pencil-sharp"
-              color={name === "" ? "#808080" : "white"}
-            />
-            <Text
-              style={name === "" ? styles.buttonTextDisable : styles.buttonText}
-            >
-              Editar
-            </Text>
-          </TouchableOpacity>
-        </View>
+            Editar
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

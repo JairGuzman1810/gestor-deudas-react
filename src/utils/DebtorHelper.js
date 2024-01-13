@@ -1,21 +1,12 @@
 /* eslint-disable prettier/prettier */
 import { onValue, push, ref, set, update } from "firebase/database";
-import { Platform, ToastAndroid, Alert } from "react-native";
 
 import { FIREBASE_DATABASE, FIREBASE_AUTH } from "../../firebaseConfig";
 
 // Esta función agrega a una persona que debe dinero a la base de datos
 // DebtorHelper.js
 
-export const addDebtor = async (
-  name,
-  phoneNumber,
-  notes,
-  setName,
-  setPhoneNumber,
-  // eslint-disable-next-line prettier/prettier
-  setNotes
-) => {
+export const addDebtor = async (name, phoneNumber, notes) => {
   try {
     const user = FIREBASE_AUTH.currentUser;
 
@@ -36,17 +27,6 @@ export const addDebtor = async (
       };
 
       await set(newDebtorRef, debtorData);
-
-      if (Platform.OS === "android") {
-        ToastAndroid.show("Deudor agregado.", ToastAndroid.SHORT);
-      } else {
-        Alert.alert("Deudor agregado.");
-      }
-
-      // Limpia los campos después de la inserción exitosa
-      setName("");
-      setPhoneNumber("");
-      setNotes("");
 
       console.log(`Debtor data added successfully at key ${pushKey}`);
       return true; // Retorna true si la inserción fue exitosa
@@ -81,10 +61,8 @@ export const updateDebtor = async (debtorUID, name, phoneNumber, notes) => {
 
       // Limpia los campos después de la actualización exitosa
 
-      console.log(`Debtor data updated successfully for UID ${debtorUID}`);
       return true; // Retorna true si la actualización fue exitosa
     } else {
-      console.log("No hay un usuario conectado");
       return false; // Retorna false si no hay un usuario conectado
     }
   } catch (error) {
