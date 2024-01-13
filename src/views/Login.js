@@ -194,6 +194,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 4 }, // Adjust the offset if needed
+        shadowOpacity: 0.5, // Increase the opacity for a more visible shadow
+        shadowRadius: 6, // Adjust the radius if needed
+      },
+      android: {
+        elevation: 8, // Increase the elevation for a more visible shadow
+      },
+    }),
   },
   buttonText: {
     fontFamily: "Montserrat-Bold",
@@ -206,6 +217,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 4 }, // Adjust the offset if needed
+        shadowOpacity: 0.5, // Increase the opacity for a more visible shadow
+        shadowRadius: 6, // Adjust the radius if needed
+      },
+      android: {
+        elevation: 4, // Increase the elevation for a more visible shadow
+      },
+    }),
   },
   buttonTextDisable: {
     fontFamily: "Montserrat-Bold",

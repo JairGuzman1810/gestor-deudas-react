@@ -7,6 +7,7 @@ import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
 import ChangePassword from "../views/ChangePassword";
 import DetailDebtor from "../views/DetailDebtor";
+import EditDebtor from "../views/EditDebtor";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import NewDebtor from "../views/NewDebtor";
@@ -70,6 +71,11 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         <Drawer.Screen
           name="DetailDebtor"
           component={DetailDebtor}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="EditDebtor"
+          component={EditDebtor}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>

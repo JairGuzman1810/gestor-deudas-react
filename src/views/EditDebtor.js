@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -8,29 +9,80 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  ToastAndroid,
+  Alert,
 } from "react-native";
 
-import { addDebtor } from "../utils/DebtorHelper";
+import { updateDebtor } from "../utils/DebtorHelper";
 
-const NewDebtor = () => {
+const EditDebtor = ({ route }) => {
   const navigation = useNavigation();
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [notes, setNotes] = useState("");
+  const { debtor, isHome } = route.params;
+  const [name, setName] = useState(debtor.nombre);
+  const [phoneNumber, setPhoneNumber] = useState(debtor.telefono);
+  const [notes, setNotes] = useState(debtor.notas);
 
   const goBack = () => {
-    navigation.navigate("Home");
+    if (isHome) {
+      navigation.navigate("Home");
+    } else {
+      navigation.navigate("DetailDebtor", { debtor });
+    }
   };
-  const handleAddDebtor = async () => {
-    await addDebtor(
-      name,
-      phoneNumber,
-      notes,
-      setName,
-      setPhoneNumber,
-      // eslint-disable-next-line prettier/prettier
-      setNotes
-    );
+  const handleUpdateDebtor = async () => {
+    // Comparar con los valores originales
+    if (
+      name === debtor.nombre &&
+      phoneNumber === debtor.telefono &&
+      notes === debtor.notas
+    ) {
+      // Mostrar mensaje indicando que no hay cambios
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "No hay cambios para actualizar.",
+          ToastAndroid.SHORT
+        );
+      } else {
+        Alert.alert("No hay cambios para actualizar.");
+      }
+      return;
+    }
+
+    try {
+      const result = await updateDebtor(debtor.uid, name, phoneNumber, notes);
+
+      if (result) {
+        console.log("Update successful");
+
+        if (Platform.OS === "android") {
+          ToastAndroid.show(
+            "Información de deudor actualizada.",
+            ToastAndroid.SHORT
+          );
+        } else {
+          Alert.alert("Información de deudor actualizada.");
+        }
+
+        // Update debtor locally
+        const updatedDebtor = {
+          ...debtor,
+          nombre: name,
+          telefono: phoneNumber,
+          notas: notes,
+        };
+
+        // Check if isHome and navigate accordingly
+        if (isHome) {
+          navigation.navigate("Home");
+        } else {
+          navigation.navigate("DetailDebtor", { debtor: updatedDebtor });
+        }
+      } else {
+        console.log("Update failed");
+      }
+    } catch (error) {
+      console.error("Error updating debtor:", error);
+    }
   };
 
   return (
@@ -42,7 +94,7 @@ const NewDebtor = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.titlecontainer}>
-          <Text style={styles.title}>Nuevo deudor</Text>
+          <Text style={styles.title}>Editar deudor</Text>
         </View>
       </View>
       <View style={styles.content}>
@@ -100,23 +152,22 @@ const NewDebtor = () => {
           </View>
         </View>
         {/* Change Password button */}
-
         <View style={name === "" ? styles.buttonDisable : styles.button}>
           <TouchableOpacity
             style={styles.touchableOpacity}
             disabled={name === ""}
-            onPress={handleAddDebtor}
+            onPress={handleUpdateDebtor}
           >
             <Ionicons
               style={styles.iconinput}
               size={25}
-              name="add"
+              name="pencil-sharp"
               color={name === "" ? "#808080" : "white"}
             />
             <Text
               style={name === "" ? styles.buttonTextDisable : styles.buttonText}
             >
-              Agregar
+              Editar
             </Text>
           </TouchableOpacity>
         </View>
@@ -260,4 +311,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewDebtor;
+export default EditDebtor;

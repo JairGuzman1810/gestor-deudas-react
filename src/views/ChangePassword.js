@@ -121,9 +121,14 @@ const ChangePassword = () => {
       </View>
 
       {/* Change Password button */}
-      <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-        <Text style={styles.buttonText}>Cambiar Contraseña</Text>
-      </TouchableOpacity>
+      <View style={styles.button}>
+        <TouchableOpacity
+          onPress={handleChangePassword}
+          style={styles.touchableOpacity}
+        >
+          <Text style={styles.buttonText}>Cambiar Contraseña</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -165,10 +170,20 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#1A7A13",
-    padding: 15,
     borderRadius: 15,
     alignSelf: "center",
     marginTop: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "black",
+        shadowOffset: { width: 0, height: 4 }, // Adjust the offset if needed
+        shadowOpacity: 0.5, // Increase the opacity for a more visible shadow
+        shadowRadius: 6, // Adjust the radius if needed
+      },
+      android: {
+        elevation: 4, // Increase the elevation for a more visible shadow
+      },
+    }),
   },
   buttonText: {
     color: "white",
@@ -213,6 +228,12 @@ const styles = StyleSheet.create({
   },
   iconinput: {
     marginRight: 5,
+  },
+  touchableOpacity: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
   },
 });
 

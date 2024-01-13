@@ -1,18 +1,59 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import * as Linking from "expo-linking";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   Platform,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 
 import MovementItem from "../components/MovementItem";
+import { fetchDebtor } from "../utils/MovementsHelper";
 
-const DetailDebtor = () => {
+const DetailDebtor = ({ route }) => {
   const navigation = useNavigation();
+  const [movements, setMovements] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { debtor } = route.params;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchDebtor(debtor);
+        setMovements(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [debtor]);
+
+  const doCall = () => {
+    if (debtor.telefono) {
+      Linking.openURL(`tel:${debtor.telefono}`);
+    } else {
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "No tienes un número asignado a este deudor.",
+          ToastAndroid.SHORT
+        );
+      } else {
+        Alert.alert("No tienes un número asignado a este deudor.");
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -41,7 +82,12 @@ const DetailDebtor = () => {
           <Ionicons name="download-sharp" size={28} color="white" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.iconButton]} onPress={() => {}}>
+        <TouchableOpacity
+          style={[styles.iconButton]}
+          onPress={() => {
+            navigation.navigate("EditDebtor", { debtor, isHome: false });
+          }}
+        >
           <Ionicons name="pencil-sharp" size={28} color="white" />
         </TouchableOpacity>
       </View>
@@ -51,26 +97,48 @@ const DetailDebtor = () => {
           <TouchableOpacity>
             <Ionicons name="person" size={18} color="black" />
           </TouchableOpacity>
-          <Text style={styles.name}>Ayuda</Text>
+          <Text style={styles.name}>{debtor.nombre}</Text>
         </View>
         <View style={styles.rightnamecontainer}>
           <TouchableOpacity>
-            <Ionicons name="call" size={30} color="black" />
+            <Ionicons
+              onPress={doCall}
+              name={debtor.telefono ? "call" : "call-outline"}
+              size={30}
+              color="black"
+            />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.contentcontainer}>
         <Text style={styles.contenttitle}>Notas</Text>
         <View style={styles.separator} />
-        <Text style={styles.notes}>No hay notas en este deudor.</Text>
+        <Text style={styles.notes}>
+          {debtor.notas ? debtor.notas : "No hay notas en este deudor."}
+        </Text>
       </View>
       <View style={styles.contentcontainer}>
         <Text style={styles.contenttitle}>Deuda Total</Text>
         <View style={styles.separator} />
         <View style={styles.amountcontainer}>
           <View style={styles.leftamountcontainer}>
-            <Text style={[styles.amount, { color: "#1A7A13" }]}>
-              $ 12,800.65
+            <Text
+              style={[
+                styles.amount,
+                {
+                  color:
+                    debtor.deudaindividual === 0
+                      ? "#30BFBF" // Color para deudaindividual igual a 0
+                      : debtor.deudaindividual > 0
+                        ? "#1A7A13" // Color para deudaindividual mayor a 0
+                        : "#B11D1D", // Color para deudaindividual menor a 0
+                },
+              ]}
+            >
+              $
+              {debtor.deudaindividual
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
             </Text>
           </View>
           <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
@@ -86,13 +154,44 @@ const DetailDebtor = () => {
         </View>
       </View>
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Movimientos (4)</Text>
+        <Text style={styles.contenttitle}>
+          {isLoading
+            ? "Movimientos (...)"
+            : `Movimientos (${Object.values(movements).length})`}
+        </Text>
         <View style={[styles.separator, { marginBottom: 0 }]} />
       </View>
-      <MovementItem />
-      <MovementItem />
-      <MovementItem />
-      <MovementItem />
+      {isLoading ? (
+        <ActivityIndicator style={{ flex: 1 }} size="large" color="#808080" />
+      ) : (
+        <>
+          {Object.values(movements).length === 0 ? (
+            <View style={styles.noMovementsContainer}>
+              <Text style={styles.noMovementsText}>
+                Sin movimientos. Haga su primer movimiento con los botones
+              </Text>
+              <View style={styles.noMovementsButtons}>
+                <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
+                  <TouchableOpacity style={styles.touchableOpacity}>
+                    <Text style={styles.buttonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.button, { backgroundColor: "#B11D1D" }]}>
+                  <TouchableOpacity style={styles.touchableOpacity}>
+                    <Text style={styles.buttonText}>-</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <FlatList
+              data={Object.values(movements)}
+              keyExtractor={(item) => item.uid}
+              renderItem={({ item }) => <MovementItem debtor={item} />}
+            />
+          )}
+        </>
+      )}
     </View>
   );
 };
@@ -180,6 +279,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   notes: {
+    textAlign: "justify",
     fontFamily: "Montserrat-Regular",
     fontSize: 17,
     color: "#000",
@@ -225,5 +325,19 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  noMovementsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noMovementsText: {
+    fontFamily: "Montserrat-Regular",
+    textAlign: "center",
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  noMovementsButtons: {
+    flexDirection: "row",
   },
 });

@@ -16,7 +16,7 @@ const DebtorItem = ({ debtor }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handlePress = () => {
-    navigation.navigate("DetailDebtor");
+    navigation.navigate("DetailDebtor", { debtor });
   };
 
   const handleLongPress = () => {
@@ -72,15 +72,18 @@ const DebtorItem = ({ debtor }) => {
               ]}
             >
               $
-              {debtor.deudaindividual.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {debtor.deudaindividual !== undefined
+                ? debtor.deudaindividual.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                : "0"}
             </Text>
             <Text style={styles.date}>
-              {debtor.ultimomovimiento !== 0
+              {debtor.ultimomovimiento !== undefined &&
+              debtor.ultimomovimiento !== 0
                 ? new Date(debtor.ultimomovimiento).toLocaleString()
-                : "--"}{" "}
+                : "--"}
             </Text>
           </View>
         </View>

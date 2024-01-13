@@ -1,4 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   View,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 
 const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
+  const navigation = useNavigation();
   return (
     <Modal
       transparent
@@ -29,7 +31,10 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
           </Text>
           <View style={styles.button}>
             <TouchableOpacity
-              onPress={hideModal}
+              onPress={() => {
+                navigation.navigate("EditDebtor", { debtor, isHome: true });
+                hideModal();
+              }}
               style={styles.touchableOpacity}
             >
               <Text style={styles.buttonText}>Editar</Text>
@@ -110,6 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   touchableOpacity: {
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
     padding: 15,

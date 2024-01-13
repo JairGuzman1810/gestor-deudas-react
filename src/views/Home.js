@@ -78,7 +78,7 @@ const Home = () => {
   useEffect(() => {
     // Calculate the total debt whenever debtors change
     const newTotalDebt = Object.values(debtors).reduce(
-      (total, debtor) => total + debtor.deudaindividual,
+      (total, debtor) => total + (debtor.deudaindividual ?? 0),
       0
     );
 
@@ -96,8 +96,10 @@ const Home = () => {
     setIsModalVisible(false);
   };
 
-  const filteredDebtors = Object.values(debtors).filter((debtor) =>
-    debtor.nombre.toLowerCase().includes(search.toLowerCase())
+  const filteredDebtors = Object.values(debtors).filter(
+    (debtor) =>
+      debtor.nombre !== undefined &&
+      debtor.nombre.toLowerCase().includes(search.toLowerCase())
   );
 
   const navigation = useNavigation();
