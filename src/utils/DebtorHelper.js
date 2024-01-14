@@ -96,3 +96,37 @@ export const getAllDebtors = (setDebtors) => {
     return null; // Return null if no user is connected
   }
 };
+
+export const updateDebtorDetails = async (
+  debtorUID,
+  ultimomovimiento,
+  deudaindividual
+) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = user.uid;
+      const debtorRef = ref(
+        FIREBASE_DATABASE,
+        `Deudores/${userUID}/${debtorUID}`
+      );
+
+      const debtorData = {
+        ultimomovimiento,
+        deudaindividual,
+      };
+
+      await update(debtorRef, debtorData);
+
+      // Limpia los campos después de la actualización exitosa
+
+      return true; // Retorna true si la actualización fue exitosa
+    } else {
+      return false; // Retorna false si no hay un usuario conectado
+    }
+  } catch (error) {
+    console.error("Error al actualizar información de deudor:", error);
+    return false; // Retorna false en caso de error durante la actualización
+  }
+};

@@ -1,22 +1,36 @@
 import React from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 
-const MovementItem = ({
-  movimiento = "$100,000",
-  notas = "Como estas",
-  fecha = "2024/10/12",
-}) => {
+const MovementItem = ({ movement }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.cardView}>
         <View style={styles.innerContainer}>
-          <Text style={styles.text}>{movimiento}</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                color:
+                  movement.importe === 0
+                    ? "#30BFBF" // Color para deudaindividual igual a 0
+                    : movement.importe > 0
+                      ? "#1A7A13" // Color para deudaindividual mayor a 0
+                      : "#B11D1D", // Color para deudaindividual menor a 0
+              },
+            ]}
+          >
+            ${movement.importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+          </Text>
           <Text
             style={[styles.text, { textAlign: "center", color: "#878585" }]}
           >
-            {notas}
+            {movement.descripcion}
           </Text>
-          <Text style={[styles.text, styles.rightAlignedText]}>{fecha}</Text>
+          <Text style={[styles.text, styles.rightAlignedText]}>
+            {movement.fecha !== undefined && movement.fecha !== 0
+              ? new Date(movement.fecha).toLocaleDateString()
+              : "--"}
+          </Text>
         </View>
       </View>
     </View>

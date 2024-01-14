@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
   View,
@@ -12,25 +13,49 @@ import {
 const SortModal = ({
   isModalVisible,
   hideModal,
-  setDebtors,
-  debtors,
   sortingOrder,
   setSortingOrder,
   selectedOption,
   setSelectedOption,
+  sortingValues,
+  setSortingValues,
 }) => {
   const handlePressOutside = () => {
     // Close the modal when clicking outside
     hideModal();
   };
 
-  const handleSortOptionPress = (option) => {
+  const handleSortOptionPress = async (option) => {
     // Toggle sorting order when an option is pressed
-    setSelectedOption(option);
-    setSortingOrder((prevOrder) => (prevOrder === "Asc" ? "Desc" : "Asc"));
-    // Actualiza la opción seleccionada
+    hideModal();
 
-    //hideModal();
+    setSelectedOption(option);
+
+    // Update sortingOrder with the new value
+    const newSortingOrder = sortingOrder === "Asc" ? "Desc" : "Asc";
+    setSortingOrder(newSortingOrder);
+
+    // Guardar selectedOption y sortingOrder en un nuevo objeto
+    const sortingValuesObject = {
+      selectedOption: option,
+      sortingOrder: newSortingOrder,
+    };
+
+    // Actualizar el estado con el nuevo objeto
+    console.log(sortingValuesObject);
+    setSortingValues(sortingValuesObject);
+
+    // Guardar el objeto en AsyncStorage
+    try {
+      await AsyncStorage.setItem(
+        "sortingValues",
+        JSON.stringify(sortingValuesObject)
+      );
+    } catch (error) {
+      console.error("Error saving data to AsyncStorage:", error);
+    }
+
+    // Resto de tu lógica...
   };
 
   return (

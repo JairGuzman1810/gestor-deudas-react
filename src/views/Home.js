@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,60 +21,130 @@ const Home = () => {
   const [debtors, setDebtors] = useState({});
   const [isSearching, setIsSerching] = useState(false);
   const [totalDebt, setTotalDebt] = useState(0);
-  const [search, setSearch] = useState(0);
+  const [search, setSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [sortingOrder, setSortingOrder] = useState("Asc");
   const [selectedOption, setSelectedOption] = useState("Fecha de creación");
+  const [sortingValues, setSortingValues] = useState({
+    selectedOption,
+    sortingOrder,
+  });
 
   useEffect(() => {
-    // Set up the real-time listener and get the unsubscribe function
-    getAllDebtors((debtors) => {
-      const debtorsArray = Object.values(debtors);
-      // Handle the sorting logic based on the selected option
-      const sortedDebtors = [...debtorsArray];
+    // Fetch the saved search text from AsyncStorage on component mount
+    AsyncStorage.getItem("searchText")
+      .then((storedSearchText) => {
+        if (storedSearchText) {
+          setSearch(storedSearchText);
+          setIsSerching(true);
+          setSearchFocused(false);
+        }
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
-      switch (selectedOption) {
-        case "Alfabeticamente":
-          sortedDebtors.sort((a, b) =>
-            sortingOrder === "Asc"
-              ? a.nombre.localeCompare(b.nombre)
-              : b.nombre.localeCompare(a.nombre)
-          );
-          break;
-        case "Fecha del movimiento":
-          sortedDebtors.sort((a, b) =>
-            sortingOrder === "Asc"
-              ? a.ultimomovimiento - b.ultimomovimiento
-              : b.ultimomovimiento - a.ultimomovimiento
-          );
-          break;
-        case "Fecha de creación":
-          sortedDebtors.sort((a, b) =>
-            sortingOrder === "Asc" ? a.creado - b.creado : b.creado - a.creado
-          );
-          break;
-        case "Deuda":
-          sortedDebtors.sort((a, b) =>
-            sortingOrder === "Asc"
-              ? a.deudaindividual - b.deudaindividual
-              : b.deudaindividual - a.deudaindividual
-          );
-          break;
-        default:
-          break;
+  useEffect(() => {
+    let storedSortingValues;
+    const fetchData = async () => {
+      try {
+        // Recuperar la cadena JSON de sortingValues desde AsyncStorage
+        const storedSortingValuesString =
+          await AsyncStorage.getItem("sortingValues");
+
+        // Si hay una cadena JSON válida, convertirla a un objeto
+        if (storedSortingValuesString) {
+          storedSortingValues = JSON.parse(storedSortingValuesString);
+
+          // Actualizar el estado con los valores recuperados
+        }
+      } catch (error) {
+        console.error("Error fetching data from AsyncStorage:", error);
       }
 
-      // Convert the sorted array back to an object
-      const sortedDebtorsObject = {};
-      sortedDebtors.forEach((debtor) => {
-        sortedDebtorsObject[debtor.uid] = debtor;
-      });
+      // Set up the real-time listener and get the unsubscribe function
+      setIsLoading(true);
 
-      setDebtors(sortedDebtorsObject);
-      setIsLoading(false);
-    });
-  }, [selectedOption, sortingOrder]); // El array vacío [] significa que se ejecutará solo una vez
+      getAllDebtors((debtors) => {
+        const debtorsArray = Object.values(debtors);
+        // Handle the sorting logic based on the selected option
+        const sortedDebtors = [...debtorsArray];
+
+        switch (storedSortingValues.selectedOption) {
+          case "Alfabeticamente":
+            sortedDebtors.sort((a, b) =>
+              storedSortingValues.sortingOrder === "Asc"
+                ? a.nombre.localeCompare(b.nombre)
+                : b.nombre.localeCompare(a.nombre)
+            );
+            break;
+          case "Fecha del movimiento":
+            sortedDebtors.sort((a, b) =>
+              storedSortingValues.sortingOrder === "Asc"
+                ? a.ultimomovimiento - b.ultimomovimiento
+                : b.ultimomovimiento - a.ultimomovimiento
+            );
+            break;
+          case "Fecha de creación":
+            sortedDebtors.sort((a, b) =>
+              storedSortingValues.sortingOrder === "Asc"
+                ? a.creado - b.creado
+                : b.creado - a.creado
+            );
+            break;
+          case "Deuda":
+            sortedDebtors.sort((a, b) =>
+              storedSortingValues.sortingOrder === "Asc"
+                ? a.deudaindividual - b.deudaindividual
+                : b.deudaindividual - a.deudaindividual
+            );
+            break;
+          default:
+            break;
+        }
+
+        // Convert the sorted array back to an object
+        const sortedDebtorsObject = {};
+        sortedDebtors.forEach((debtor) => {
+          sortedDebtorsObject[debtor.uid] = debtor;
+        });
+
+        setDebtors(sortedDebtorsObject);
+        setIsLoading(false);
+      });
+    };
+
+    // Llamar a la función para realizar las consultas al montar el componente
+    fetchData();
+  }, [sortingValues]); // Escucha los cambios en sortingValues
+
+  useEffect(() => {
+    const fetchSortData = async () => {
+      try {
+        // Recuperar la cadena JSON de sortingValues desde AsyncStorage
+        const storedSortingValuesString =
+          await AsyncStorage.getItem("sortingValues");
+
+        // Si hay una cadena JSON válida, convertirla a un objeto
+        if (storedSortingValuesString) {
+          const storedSortingValues = JSON.parse(storedSortingValuesString);
+
+          setSelectedOption(storedSortingValues.selectedOption);
+          setSortingOrder(storedSortingValues.sortingOrder);
+
+          // Actualizar el estado con los valores recuperados
+        }
+      } catch (error) {
+        console.error("Error fetching data from AsyncStorage:", error);
+      }
+
+      // Set up the real-time listener and get the unsubscribe function
+    };
+
+    // Llamar a la función para realizar las consultas al montar el componente
+    fetchSortData();
+  }, []); //
 
   useEffect(() => {
     // Calculate the total debt whenever debtors change
@@ -85,13 +156,6 @@ const Home = () => {
     setTotalDebt(newTotalDebt);
   }, [debtors]);
 
-  useEffect(() => {
-    // Clear search term when not searching
-    if (!isSearching) {
-      setSearch("");
-    }
-  }, [isSearching]);
-
   const hideModal = () => {
     setIsModalVisible(false);
   };
@@ -99,8 +163,17 @@ const Home = () => {
   const filteredDebtors = Object.values(debtors).filter(
     (debtor) =>
       debtor.nombre !== undefined &&
-      debtor.nombre.toLowerCase().includes(search.toLowerCase())
+      debtor.nombre.toLowerCase().includes(search && search.toLowerCase())
   );
+
+  const handleSearchChange = (newSearchText) => {
+    setSearch(newSearchText);
+
+    // Save the new search text to AsyncStorage
+    AsyncStorage.setItem("searchText", newSearchText)
+      .then(() => console.log("Search text saved to AsyncStorage"))
+      .catch((error) => console.error(error));
+  };
 
   const navigation = useNavigation();
   return (
@@ -145,7 +218,17 @@ const Home = () => {
             },
           ]}
           onPress={() => {
+            //desactivar/activar la barra de busqueda.
             setIsSerching(!isSearching);
+            //Siempre true para que se active el teclado.
+            setSearchFocused(true);
+            //Vaciamos para no quede busqueda anterior.
+            setSearch("");
+            //Guardamos en el async, evitamos que abra la barra de busqueda
+            //con algo que ya no se esta buscando.
+            AsyncStorage.setItem("searchText", "")
+              .then(() => console.log("Search text cleared"))
+              .catch((error) => console.error(error));
           }}
         >
           <Ionicons
@@ -170,10 +253,10 @@ const Home = () => {
         <View style={styles.input}>
           <TextInput
             value={search}
-            onChangeText={(text) => setSearch(text)}
+            onChangeText={handleSearchChange}
             style={styles.textinput}
             placeholder="Buscar"
-            autoFocus={isSearching}
+            autoFocus={searchFocused}
           />
         </View>
       )}
@@ -235,12 +318,12 @@ const Home = () => {
       <SortModal
         isModalVisible={isModalVisible}
         hideModal={hideModal}
-        setDebtors={setDebtors}
-        debtors={debtors}
         sortingOrder={sortingOrder}
         setSortingOrder={setSortingOrder}
         selectedOption={selectedOption}
         setSelectedOption={setSelectedOption}
+        sortingValues={sortingValues}
+        setSortingValues={setSortingValues}
       />
     </View>
   );

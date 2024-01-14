@@ -15,6 +15,32 @@ import {
 
 import { updateDebtor } from "../utils/DebtorHelper";
 
+const formatPhoneNumber = (phoneNumber) => {
+  // Elimina cualquier caracter que no sea dígito
+  const cleanedNumber = phoneNumber.replace(/\D/g, "");
+
+  // Aplica formato si el número empieza con "+"
+  if (phoneNumber.startsWith("+")) {
+    const formattedNumber = cleanedNumber.replace(
+      /(\d{1,2})(\d{3})(\d{3})(\d{4})/,
+      "+$1 $2 $3 $4"
+    );
+    return formattedNumber;
+  }
+
+  // Aplica formato si el número no tiene prefijo de país
+  if (cleanedNumber.length === 10) {
+    const formattedNumber = cleanedNumber.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "$1 $2 $3"
+    );
+    return formattedNumber;
+  }
+
+  // Si no se cumple ninguna de las condiciones anteriores, devuelve el número sin formato
+  return cleanedNumber;
+};
+
 const EditDebtor = ({ route }) => {
   const navigation = useNavigation();
   const { debtor, isHome } = route.params;
@@ -157,6 +183,12 @@ const EditDebtor = ({ route }) => {
             placeholder="Teléfono"
           />
         </View>
+        <Text style={[styles.formattedTitle]}>Previsualización:</Text>
+        <Text style={[styles.formattedPhone]}>
+          {phoneNumber
+            ? formatPhoneNumber(phoneNumber)
+            : "No hay número registrado."}
+        </Text>
       </View>
       {/* Notas */}
       <View style={[styles.section]}>
@@ -332,6 +364,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 15,
+  },
+  formattedPhone: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: 18,
+    color: "#000",
+    textAlign: "center",
+    marginTop: 5,
+  },
+  formattedTitle: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: 17,
+    color: "#000",
+    textAlign: "center",
+    marginTop: 5,
   },
 });
 

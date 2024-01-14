@@ -16,7 +16,9 @@ const DebtorItem = ({ debtor }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handlePress = () => {
-    navigation.navigate("DetailDebtor", { debtor });
+    navigation.navigate("DetailDebtor", {
+      debtor,
+    });
   };
 
   const handleLongPress = () => {

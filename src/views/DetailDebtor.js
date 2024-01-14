@@ -16,19 +16,27 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 
 import MovementItem from "../components/MovementItem";
-import { fetchDebtor } from "../utils/MovementsHelper";
+import { fetchMovements } from "../utils/MovementsHelper";
 
 const DetailDebtor = ({ route }) => {
   const navigation = useNavigation();
   const [movements, setMovements] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { debtor } = route.params;
+
+  const goBack = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Home" }],
+    });
+    setIsLoading(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchDebtor(debtor);
+        const data = await fetchMovements(debtor);
         setMovements(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,11 +64,17 @@ const DetailDebtor = ({ route }) => {
   };
 
   const newPayment = () => {
-    navigation.navigate("NewMovement", { debtor, isPayment: true });
+    navigation.navigate("NewMovement", {
+      debtor,
+      isPayment: true,
+    });
   };
 
   const newDebt = () => {
-    navigation.navigate("NewMovement", { debtor, isPayment: false });
+    navigation.navigate("NewMovement", {
+      debtor,
+      isPayment: false,
+    });
   };
 
   return (
@@ -75,7 +89,7 @@ const DetailDebtor = ({ route }) => {
               name="arrow-back"
               size={30}
               color="white"
-              onPress={() => navigation.navigate("Home")}
+              onPress={goBack}
             />
           </TouchableOpacity>
         </View>
@@ -204,7 +218,7 @@ const DetailDebtor = ({ route }) => {
             <FlatList
               data={Object.values(movements)}
               keyExtractor={(item) => item.uid}
-              renderItem={({ item }) => <MovementItem debtor={item} />}
+              renderItem={({ item }) => <MovementItem movement={item} />}
             />
           )}
         </>
