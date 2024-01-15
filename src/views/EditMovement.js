@@ -15,7 +15,7 @@ import {
   Alert,
 } from "react-native";
 
-import { addMovement, updateMovement } from "../utils/MovementsHelper";
+import { updateMovement } from "../utils/MovementsHelper";
 
 const formatCurrency = (value) => {
   return value.toLocaleString(undefined, {
@@ -28,7 +28,7 @@ const formatCurrency = (value) => {
 
 const EditMovement = ({ route }) => {
   const { movement, debtor, isPayment } = route.params;
-  const [amount, setAmount] = useState(movement.importe.toString());
+  const [amount, setAmount] = useState(Math.abs(movement.importe).toString());
   const [description, setDescription] = useState(movement.descripcion);
   const [date, setDate] = useState(new Date(movement.fecha));
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -47,9 +47,9 @@ const EditMovement = ({ route }) => {
 
   const handleUpdateMovement = async () => {
     if (
-      amount === movement.importe &&
+      Math.abs(amount) === Math.abs(movement.importe) &&
       description === movement.descripcion &&
-      date === new Date(movement.fecha)
+      date.getTime() === new Date(movement.fecha).getTime()
     ) {
       // Mostrar mensaje indicando que no hay cambios
       if (Platform.OS === "android") {
@@ -62,6 +62,7 @@ const EditMovement = ({ route }) => {
       }
       return;
     }
+
     try {
       const result = await updateMovement(
         movement,
