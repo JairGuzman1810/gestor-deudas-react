@@ -4,18 +4,18 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
+  Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  TextInput,
   View,
-  Platform,
+  TouchableOpacity,
   Pressable,
   ToastAndroid,
   Alert,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 
-import { addMovement } from "../utils/MovementsHelper";
+import { addMovement, updateMovement } from "../utils/MovementsHelper";
 
 const formatCurrency = (value) => {
   return value.toLocaleString(undefined, {
@@ -26,61 +26,82 @@ const formatCurrency = (value) => {
   });
 };
 
-const NewMovement = ({ route }) => {
-  const { debtor, isPayment } = route.params;
-  const [amount, setAmount] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
+const EditMovement = ({ route }) => {
+  const { movement, debtor, isPayment } = route.params;
+  const [amount, setAmount] = useState(movement.importe.toString());
+  const [description, setDescription] = useState(movement.descripcion);
+  const [date, setDate] = useState(new Date(movement.fecha));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const navigation = useNavigation();
 
   const goBack = () => {
-    setAmount("");
-    setDescription("");
-    setDate(new Date());
-    navigation.navigate("DetailDebtor", { debtor });
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "DetailDebtor", params: { debtor } }],
+    });
   };
 
-  const handleAddMovement = async () => {
+  const handleDatePress = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleUpdateMovement = async () => {
+    if (
+      amount === movement.importe &&
+      description === movement.descripcion &&
+      date === new Date(movement.fecha)
+    ) {
+      // Mostrar mensaje indicando que no hay cambios
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "No hay cambios para actualizar.",
+          ToastAndroid.SHORT
+        );
+      } else {
+        Alert.alert("No hay cambios para actualizar.");
+      }
+      return;
+    }
     try {
-      const result = await addMovement(
+      const result = await updateMovement(
+        movement,
+        debtor,
         isPayment ? amount : -amount,
         description,
-        date,
-        debtor
+        date
       );
-      if (result !== null) {
-        console.log("Movement added successfully");
+      if (result) {
+        console.log("Movement updated successfully");
 
         if (Platform.OS === "android") {
           ToastAndroid.show(
-            "Nuevo movimiento registrado para el deudor " + debtor.nombre + ".",
+            "Movimiento actualizado para el deudor " + debtor.nombre + ".",
             ToastAndroid.LONG
           );
         } else {
           Alert.alert(
-            "Nuevo movimiento registrado para el deudor " + debtor.nombre + "."
+            "Movimiento actualizado para el deudor " + debtor.nombre + "."
           );
         }
 
         // Clear the fields after successful insertion
         navigation.reset({
           index: 0,
-          routes: [{ name: "DetailDebtor", params: { debtor: result } }],
+          routes: [{ name: "DetailDebtor", params: { debtor } }],
         });
       } else {
-        console.log("Added failed");
+        console.log("Update failed");
 
         // Display error message for failure
         if (Platform.OS === "android") {
           ToastAndroid.show(
-            "Error al agregar el movimiento. Inténtelo de nuevo.",
+            "Error al actualizar el movimiento. Inténtelo de nuevo.",
             ToastAndroid.LONG
           );
         } else {
           Alert.alert(
             "Error",
-            "No se pudo agregar el movimiento. Por favor, inténtelo de nuevo."
+            "No se pudo actualizar el movimiento. Por favor, inténtelo de nuevo."
           );
         }
       }
@@ -89,25 +110,19 @@ const NewMovement = ({ route }) => {
 
       // Handle errors with Toast or Alert
       if (Platform.OS === "android") {
-        ToastAndroid.show("Error al agregar movimiento.", ToastAndroid.LONG);
+        ToastAndroid.show("Error al actualizar movimiento.", ToastAndroid.LONG);
       } else {
         Alert.alert(
           "Error",
-          "No se pudo agregar el movimiento. Por favor, inténtelo de nuevo."
+          "No se pudo actualizar el movimiento. Por favor, inténtelo de nuevo."
         );
       }
     }
   };
 
-  const handleDatePress = () => {
-    setShowDatePicker(true);
-  };
-
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === "ios"); // Close the DatePicker for iOS immediately
     if (selectedDate) {
-      console.log("aqui" + selectedDate);
-
       setDate(selectedDate);
     }
   };
@@ -144,7 +159,7 @@ const NewMovement = ({ route }) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>
-          {isPayment ? "Nuevo Abono" : "Nueva Deuda"}
+          {isPayment ? "Editar Abono" : "Editar Deuda"}
         </Text>
 
         <TouchableOpacity
@@ -164,7 +179,7 @@ const NewMovement = ({ route }) => {
                   : 1,
             },
           ]}
-          onPress={handleAddMovement}
+          onPress={handleUpdateMovement}
         >
           <Ionicons
             name={
@@ -283,7 +298,7 @@ const NewMovement = ({ route }) => {
   );
 };
 
-export default NewMovement;
+export default EditMovement;
 
 const styles = StyleSheet.create({
   container: {

@@ -33,7 +33,12 @@ const DebtorItem = ({ debtor }) => {
 
   return (
     <View
-      style={[styles.container, isHeld ? { backgroundColor: "#82E7EB" } : null]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: isHeld ? "#82E7EB" : "#ffff",
+        },
+      ]}
     >
       <TouchableOpacity
         style={styles.content}

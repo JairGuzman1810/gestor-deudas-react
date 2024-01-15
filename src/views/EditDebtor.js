@@ -50,9 +50,15 @@ const EditDebtor = ({ route }) => {
 
   const goBack = () => {
     if (isHome) {
-      navigation.navigate("Home");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
     } else {
-      navigation.navigate("DetailDebtor", { debtor });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "DetailDebtor", params: { debtor } }],
+      });
     }
   };
   const handleUpdateDebtor = async () => {

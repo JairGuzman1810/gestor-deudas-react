@@ -218,7 +218,9 @@ const DetailDebtor = ({ route }) => {
             <FlatList
               data={Object.values(movements)}
               keyExtractor={(item) => item.uid}
-              renderItem={({ item }) => <MovementItem movement={item} />}
+              renderItem={({ item }) => (
+                <MovementItem movement={item} debtor={debtor} />
+              )}
             />
           )}
         </>

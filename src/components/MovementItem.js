@@ -1,9 +1,43 @@
-import React from "react";
-import { View, Text, StyleSheet, Platform } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 
-const MovementItem = ({ movement }) => {
+const MovementItem = ({ movement, debtor }) => {
+  const navigation = useNavigation();
+  const [isHeld, setIsHeld] = useState(false);
+
+  const handleLongPress = async () => {
+    setIsHeld(true);
+    const timeout = setTimeout(() => {
+      setIsHeld(false);
+      navigation.navigate("EditMovement", {
+        debtor,
+        movement,
+        isPayment: parseFloat(movement.importe) > 0,
+      });
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  };
+
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onLongPress={handleLongPress}
+      delayLongPress={500} // Adjust the delay as needed
+      style={[
+        styles.cardContainer,
+        {
+          backgroundColor: isHeld ? "#82E7EB" : "#ffff",
+        },
+      ]}
+    >
       <View style={styles.cardView}>
         <View style={styles.innerContainer}>
           <Text
@@ -33,17 +67,16 @@ const MovementItem = ({ movement }) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   cardContainer: {
-    margin: 2,
-  },
-  cardView: {
-    width: "100%",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
+
+    marginHorizontal: 4,
+    marginBottom: 6,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -56,6 +89,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  cardView: {
+    width: "100%",
+  },
   innerContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -65,7 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "black",
     paddingHorizontal: 8,
-    fontSize: 14,
+    fontSize: 13.1,
     fontFamily: "Montserrat-Regular",
   },
   rightAlignedText: {

@@ -13,6 +13,7 @@ import Login from "../views/Login";
 import NewDebtor from "../views/NewDebtor";
 import NewMovement from "../views/NewMovement";
 import Splashscreen from "../views/Splashscreen";
+import EditMovement from "../views/EditMovement";
 
 const Drawer = createDrawerNavigator();
 
@@ -82,6 +83,11 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         <Drawer.Screen
           name="NewMovement"
           component={NewMovement}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="EditMovement"
+          component={EditMovement}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>
