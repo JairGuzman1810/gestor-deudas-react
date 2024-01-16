@@ -56,7 +56,10 @@ const MovementItem = ({ movement, debtor }) => {
             ${movement.importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
           </Text>
           <Text
-            style={[styles.text, { textAlign: "center", color: "#878585" }]}
+            style={[
+              styles.text,
+              { flex: 3, textAlign: "justify", color: "#878585" },
+            ]}
           >
             {movement.descripcion}
           </Text>
@@ -98,11 +101,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   text: {
-    flex: 1,
     color: "black",
     paddingHorizontal: 8,
     fontSize: 13.1,
     fontFamily: "Montserrat-Regular",
+    textAlignVertical: "center",
   },
   rightAlignedText: {
     textAlign: "right",

@@ -99,7 +99,6 @@ const DebtorItem = ({ debtor }) => {
         debtor={debtor}
         isModalVisible={isModalVisible}
         hideModal={hideModal}
-        setIsHeld={setIsHeld}
       />
     </View>
   );

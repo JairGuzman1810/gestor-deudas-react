@@ -14,7 +14,14 @@ export const fetchMovements = async (debtor) => {
     const snapshot = await get(userRef);
 
     if (snapshot.exists()) {
-      return snapshot.val();
+      const movementsData = snapshot.val();
+
+      // Convert the object values to an array and sort by 'fecha' in descending order
+      const sortedMovements = Object.values(movementsData).sort(
+        (a, b) => b.fecha - a.fecha
+      );
+
+      return sortedMovements;
     } else {
       console.log("User data not found");
       return {};

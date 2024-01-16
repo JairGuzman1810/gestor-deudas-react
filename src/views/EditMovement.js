@@ -15,6 +15,7 @@ import {
   Alert,
 } from "react-native";
 
+import MovementModal from "../components/MovementModal";
 import { updateMovement } from "../utils/MovementsHelper";
 
 const formatCurrency = (value) => {
@@ -32,6 +33,8 @@ const EditMovement = ({ route }) => {
   const [description, setDescription] = useState(movement.descripcion);
   const [date, setDate] = useState(new Date(movement.fecha));
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const navigation = useNavigation();
 
   const goBack = () => {
@@ -43,6 +46,10 @@ const EditMovement = ({ route }) => {
 
   const handleDatePress = () => {
     setShowDatePicker(true);
+  };
+
+  const hideModal = () => {
+    setIsModalVisible(false);
   };
 
   const handleUpdateMovement = async () => {
@@ -150,7 +157,9 @@ const EditMovement = ({ route }) => {
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
-          <TouchableOpacity style={[styles.toolbarButton]}>
+          <TouchableOpacity
+            style={[styles.toolbarButton, { paddingHorizontal: 10 }]}
+          >
             <Ionicons
               name="arrow-back"
               size={30}
@@ -162,6 +171,16 @@ const EditMovement = ({ route }) => {
         <Text style={styles.title}>
           {isPayment ? "Editar Abono" : "Editar Deuda"}
         </Text>
+
+        <TouchableOpacity
+          style={[styles.iconButton, { marginHorizontal: 10 }]}
+          onPress={() => {
+            /* Handle filter button press */
+            setIsModalVisible(true);
+          }}
+        >
+          <Ionicons name="trash" size={28} color="white" />
+        </TouchableOpacity>
 
         <TouchableOpacity
           disabled={
@@ -295,6 +314,12 @@ const EditMovement = ({ route }) => {
           onChange={handleDateChange}
         />
       )}
+      <MovementModal
+        debtor={debtor}
+        movement={movement}
+        isModalVisible={isModalVisible}
+        hideModal={hideModal}
+      />
     </View>
   );
 };
@@ -314,8 +339,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
-    marginBottom: 5,
+    marginBottom: 4,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -324,25 +348,32 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
       },
       android: {
-        elevation: 5,
+        elevation: 4,
       },
     }),
   },
   toolbarContainer: {
     flexDirection: "row",
-    alignItems: "center",
   },
   toolbarButton: {
-    marginRight: 5,
+    marginRight: 20,
+  },
+  title: {
+    flex: 1,
+    fontFamily: "Montserrat-Bold",
+    textAlign: "center", // Centra el texto horizontalmente
+    paddingHorizontal: 10,
+    fontSize: 18,
+    color: "white",
+  },
+  iconButton: {
+    width: "10%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   titlecontainer: {
     flex: 1,
-  },
-  title: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: 18,
-    color: "white",
-    textAlign: "center",
   },
   contentcontainer: {
     padding: 8,
