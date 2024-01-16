@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
@@ -8,10 +9,79 @@ import {
   StyleSheet,
   Modal,
   Platform,
+  ToastAndroid,
+  Alert,
 } from "react-native";
+
+import { deleteDebtor } from "../utils/DebtorHelper";
 
 const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
   const navigation = useNavigation();
+
+  const showMessageWarning = () => {
+    const message = "Mantén presionado el botón para confirmar la eliminación.";
+
+    if (Platform.OS === "android") {
+      ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      );
+    } else {
+      Alert.alert("Advertencia", message);
+    }
+  };
+
+  const handleUpdateDebtor = async () => {
+    // Comparar con los valores originales
+    try {
+      const result = await deleteDebtor(debtor.uid);
+
+      if (result) {
+        console.log("Delete successful");
+
+        if (Platform.OS === "android") {
+          ToastAndroid.show("Deudor eliminado con exíto", ToastAndroid.SHORT);
+        } else {
+          Alert.alert("Deudor eliminado con exíto");
+        }
+
+        hideModal();
+      } else {
+        console.log("Delete failed");
+
+        // Display error message for failure
+        if (Platform.OS === "android") {
+          ToastAndroid.show(
+            "Error al borrar al deudor. Inténtelo de nuevo.",
+            ToastAndroid.LONG
+          );
+        } else {
+          Alert.alert(
+            "Error",
+            "No se pudo borrar del deudor. Por favor, inténtelo de nuevo."
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting debtor:", error);
+
+      // Handle errors with Toast or Alert
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "Error al borrar al deudor. Inténtelo de nuevo.",
+          ToastAndroid.LONG
+        );
+      } else {
+        Alert.alert(
+          "Error",
+          "No se pudo borrar al deudor. Por favor, inténtelo de nuevo."
+        );
+      }
+    }
+  };
   return (
     <Modal
       transparent
@@ -42,8 +112,9 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
           </View>
           <View style={styles.deleteButton}>
             <TouchableOpacity
-              onPress={hideModal}
               style={styles.touchableOpacity}
+              onLongPress={handleUpdateDebtor}
+              onPress={showMessageWarning}
             >
               <Text style={styles.buttonText}>Eliminar</Text>
             </TouchableOpacity>

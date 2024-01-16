@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { onValue, push, ref, set, update } from "firebase/database";
+import { onValue, push, ref, set, update, remove } from "firebase/database";
 
+import { deleteAllMovements } from "./MovementsHelper";
 import { FIREBASE_DATABASE, FIREBASE_AUTH } from "../../firebaseConfig";
 
 // Esta función agrega a una persona que debe dinero a la base de datos
@@ -71,6 +72,33 @@ export const updateDebtor = async (debtorUID, name, phoneNumber, notes) => {
   }
 };
 
+export const deleteDebtor = async (debtorUID) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = user.uid;
+      const debtorRef = ref(
+        FIREBASE_DATABASE,
+        `Deudores/${userUID}/${debtorUID}`
+      );
+
+      // Borrar el deudor
+      await remove(debtorRef);
+
+      // Borrar todos los movimientos del deudor
+      await deleteAllMovements(debtorUID);
+
+      return true; // Retorna true si la eliminación fue exitosa
+    } else {
+      return false; // Retorna false si no hay un usuario conectado
+    }
+  } catch (error) {
+    console.error("Error al eliminar información de deudor:", error);
+    return false; // Retorna false en caso de error durante la eliminación
+  }
+};
+
 export const getAllDebtors = (setDebtors) => {
   const user = FIREBASE_AUTH.currentUser;
 
@@ -94,39 +122,5 @@ export const getAllDebtors = (setDebtors) => {
   } else {
     console.log("No hay un usuario conectado");
     return null; // Return null if no user is connected
-  }
-};
-
-export const updateDebtorDetails = async (
-  debtorUID,
-  ultimomovimiento,
-  deudaindividual
-) => {
-  try {
-    const user = FIREBASE_AUTH.currentUser;
-
-    if (user) {
-      const userUID = user.uid;
-      const debtorRef = ref(
-        FIREBASE_DATABASE,
-        `Deudores/${userUID}/${debtorUID}`
-      );
-
-      const debtorData = {
-        ultimomovimiento,
-        deudaindividual,
-      };
-
-      await update(debtorRef, debtorData);
-
-      // Limpia los campos después de la actualización exitosa
-
-      return true; // Retorna true si la actualización fue exitosa
-    } else {
-      return false; // Retorna false si no hay un usuario conectado
-    }
-  } catch (error) {
-    console.error("Error al actualizar información de deudor:", error);
-    return false; // Retorna false en caso de error durante la actualización
   }
 };

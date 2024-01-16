@@ -8,12 +8,12 @@ import DrawerContentUser from "../components/DrawerContentUser";
 import ChangePassword from "../views/ChangePassword";
 import DetailDebtor from "../views/DetailDebtor";
 import EditDebtor from "../views/EditDebtor";
+import EditMovement from "../views/EditMovement";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import NewDebtor from "../views/NewDebtor";
 import NewMovement from "../views/NewMovement";
 import Splashscreen from "../views/Splashscreen";
-import EditMovement from "../views/EditMovement";
 
 const Drawer = createDrawerNavigator();
 

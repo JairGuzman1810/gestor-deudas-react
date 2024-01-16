@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { get, push, ref, set, update } from "firebase/database";
+import { get, push, ref, set, update, remove } from "firebase/database";
 
-import { updateDebtorDetails } from "./DebtorHelper";
+import { updateDebtorDetails } from "./CommonHelper";
 import { FIREBASE_DATABASE, FIREBASE_AUTH } from "../../firebaseConfig";
 
 export const fetchMovements = async (debtor) => {
@@ -138,6 +138,71 @@ export const updateMovement = async (
     }
   } catch (error) {
     console.error("Error al actualizar información del movimiento:", error);
+    return null; // Retorna false en caso de error durante la actualización
+  }
+};
+
+export const deleteAllMovements = async (debtorUID) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = user.uid;
+      const movementRef = ref(
+        FIREBASE_DATABASE,
+        `Movimientos/${userUID}/${debtorUID}`
+      );
+
+      remove(movementRef);
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error al eliminar información de movimientos:", error);
+    return false;
+  }
+};
+
+export const deleteMovement = async (debtor, movement) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = user.uid;
+      const movementRef = ref(
+        FIREBASE_DATABASE,
+        `Movimientos/${userUID}/${debtor.uid}/${movement.uid}`
+      );
+
+      await remove(movementRef);
+
+      const amountupdate =
+        parseFloat(debtor.deudaindividual) - parseFloat(movement.importe);
+
+      const result = await updateDebtorDetails(
+        debtor.uid,
+        new Date().getTime(),
+        amountupdate
+      );
+
+      if (result) {
+        console.log("Update successful");
+        // Actualizar el objeto 'debtor' con los nuevos campos
+
+        debtor.deudaindividual = amountupdate;
+
+        return debtor; // Retorna el objeto 'debtor' actualizado
+      } else {
+        console.log("Update failed");
+        return null; // Retornar null si la actualización falla
+      }
+    } else {
+      return null; // Retorna false si no hay un usuario conectado
+    }
+  } catch (error) {
+    console.error("Error al borrar información del movimiento:", error);
     return null; // Retorna false en caso de error durante la actualización
   }
 };
