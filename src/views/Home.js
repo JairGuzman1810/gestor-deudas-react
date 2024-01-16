@@ -14,7 +14,7 @@ import {
 import { FlatList, TextInput } from "react-native-gesture-handler";
 
 import DebtorItem from "../components/DebtorItem";
-import SortModal from "../components/SortModal";
+import SortDebtorModal from "../components/SortDebtorModal";
 import { getAllDebtors } from "../utils/DebtorHelper";
 
 const Home = () => {
@@ -156,6 +156,13 @@ const Home = () => {
     setTotalDebt(newTotalDebt);
   }, [debtors]);
 
+  useEffect(() => {
+    //Si borra elementos y se esta buscando cierra el buscador.
+    if (Object.values(debtors).length === 0) {
+      setIsSerching(false);
+    }
+  }, [debtors]);
+
   const hideModal = () => {
     setIsModalVisible(false);
   };
@@ -193,15 +200,6 @@ const Home = () => {
         <TouchableOpacity
           style={styles.iconButton}
           onPress={() => {
-            /* Handle filter button press */
-          }}
-        >
-          <Ionicons name="download-sharp" size={28} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => {
             navigation.navigate("NewDebtor");
           }}
         >
@@ -209,12 +207,39 @@ const Home = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          disabled={isLoading || Object.values(debtors).length === 0}
+          style={[
+            styles.iconButton,
+            {
+              opacity:
+                isLoading || Object.values(debtors).length === 0 ? 0.5 : 1,
+            },
+          ]}
+          onPress={() => {
+            /* Handle filter button press */
+          }}
+        >
+          <Ionicons
+            name={
+              isLoading || Object.values(debtors).length === 0
+                ? "download-outline"
+                : "download"
+            }
+            size={28}
+            color="white"
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          disabled={isLoading || Object.values(debtors).length === 0}
           style={[
             styles.iconButton,
             {
               backgroundColor: isSearching
                 ? "#D3D2D2" // Color para deudaindividual igual a 0
                 : "#808080",
+              opacity:
+                isLoading || Object.values(debtors).length === 0 ? 0.5 : 1,
             },
           ]}
           onPress={() => {
@@ -232,20 +257,39 @@ const Home = () => {
           }}
         >
           <Ionicons
-            name={isSearching ? "search-circle-outline" : "search-circle"}
+            name={
+              isSearching || isLoading || Object.values(debtors).length === 0
+                ? "search-circle-outline"
+                : "search-circle"
+            }
             size={28}
             color="white"
           />
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.iconButton}
+          disabled={isLoading || Object.values(debtors).length === 0}
+          style={[
+            styles.iconButton,
+            {
+              opacity:
+                isLoading || Object.values(debtors).length === 0 ? 0.5 : 1,
+            },
+          ]}
           onPress={() => {
             /* Handle cancel button press */
             setIsModalVisible(true);
           }}
         >
-          <Ionicons name="filter" size={28} color="white" />
+          <Ionicons
+            name={
+              isLoading || Object.values(debtors).length === 0
+                ? "funnel-outline"
+                : "funnel"
+            }
+            size={28}
+            color="white"
+          />
         </TouchableOpacity>
       </View>
       {/* BARRA DE BUSQUEDA */}
@@ -315,7 +359,7 @@ const Home = () => {
           </Text>
         </View>
       </View>
-      <SortModal
+      <SortDebtorModal
         isModalVisible={isModalVisible}
         hideModal={hideModal}
         sortingOrder={sortingOrder}

@@ -16,12 +16,18 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 
 import MovementItem from "../components/MovementItem";
+import SortMovementModal from "../components/SortMovementModal";
 import { fetchMovements } from "../utils/MovementsHelper";
 
 const DetailDebtor = ({ route }) => {
   const navigation = useNavigation();
   const [movements, setMovements] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [sortingValues, setSortingValues] = useState({
+    selectedOption: "Fecha del movimiento",
+    sortingOrder: "Asc",
+  });
 
   const { debtor } = route.params;
 
@@ -37,7 +43,44 @@ const DetailDebtor = ({ route }) => {
     const fetchData = async () => {
       try {
         const data = await fetchMovements(debtor);
-        setMovements(data);
+
+        const movementsArray = Object.values(data);
+        // Handle the sorting logic based on the selected option
+        const sortedMovements = [...movementsArray];
+
+        switch (sortingValues.selectedOption) {
+          case "Fecha del movimiento":
+            sortedMovements.sort((a, b) =>
+              sortingValues.sortingOrder === "Asc"
+                ? a.ultimomovimiento - b.ultimomovimiento
+                : b.ultimomovimiento - a.ultimomovimiento
+            );
+            break;
+          case "Fecha de creación":
+            sortedMovements.sort((a, b) =>
+              sortingValues.sortingOrder === "Asc"
+                ? a.creado - b.creado
+                : b.creado - a.creado
+            );
+            break;
+          case "Deuda":
+            sortedMovements.sort((a, b) =>
+              sortingValues.sortingOrder === "Asc"
+                ? a.deudaindividual - b.deudaindividual
+                : b.deudaindividual - a.deudaindividual
+            );
+            break;
+          default:
+            break;
+        }
+
+        // Convert the sorted array back to an object
+        const sortedMovementsObject = {};
+        sortedMovements.forEach((debtor) => {
+          sortedMovementsObject[debtor.uid] = debtor;
+        });
+
+        setMovements(sortedMovementsObject);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -46,7 +89,47 @@ const DetailDebtor = ({ route }) => {
     };
 
     fetchData();
-  }, [debtor]);
+  }, []);
+
+  useEffect(() => {
+    const movementsArray = Object.values(movements);
+    // Handle the sorting logic based on the selected option
+    const sortedMovements = [...movementsArray];
+
+    switch (sortingValues.selectedOption) {
+      case "Fecha del movimiento":
+        sortedMovements.sort((a, b) =>
+          sortingValues.sortingOrder === "Asc"
+            ? a.fecha - b.fecha
+            : b.fecha - a.fecha
+        );
+        break;
+      case "Fecha de creación":
+        sortedMovements.sort((a, b) =>
+          sortingValues.sortingOrder === "Asc"
+            ? a.creado - b.creado
+            : b.creado - a.creado
+        );
+        break;
+      case "Deuda":
+        sortedMovements.sort((a, b) =>
+          sortingValues.sortingOrder === "Asc"
+            ? a.importe - b.importe
+            : b.importe - a.importe
+        );
+        break;
+      default:
+        break;
+    }
+
+    // Convert the sorted array back to an object
+    const sortedMovementsObject = {};
+    sortedMovements.forEach((debtor) => {
+      sortedMovementsObject[debtor.uid] = debtor;
+    });
+
+    setMovements(sortedMovementsObject);
+  }, [sortingValues]);
 
   const doCall = () => {
     if (debtor.telefono) {
@@ -77,6 +160,10 @@ const DetailDebtor = ({ route }) => {
     });
   };
 
+  const hideModal = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       {/* HEADER */}
@@ -96,12 +183,28 @@ const DetailDebtor = ({ route }) => {
         <Text style={styles.title}>Detalles</Text>
 
         <TouchableOpacity
-          style={[styles.iconButton, { marginHorizontal: 10 }]}
+          disabled={isLoading || Object.values(movements).length === 0}
+          style={[
+            styles.iconButton,
+            {
+              marginHorizontal: 10,
+              opacity:
+                isLoading || Object.values(movements).length === 0 ? 0.5 : 1,
+            },
+          ]}
           onPress={() => {
             /* Handle filter button press */
           }}
         >
-          <Ionicons name="download-sharp" size={28} color="white" />
+          <Ionicons
+            name={
+              isLoading || Object.values(movements).length === 0
+                ? "download-outline"
+                : "download"
+            }
+            size={28}
+            color="white"
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -179,11 +282,61 @@ const DetailDebtor = ({ route }) => {
         </View>
       </View>
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>
-          {isLoading
-            ? "Movimientos (...)"
-            : `Movimientos (${Object.values(movements).length})`}
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Text style={styles.contenttitle}>
+            {isLoading
+              ? "Movimientos (...)"
+              : `Movimientos (${Object.values(movements).length})`}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              flex: 1,
+            }}
+          >
+            {/* First TouchableOpacity */}
+            <TouchableOpacity
+              disabled={isLoading || Object.values(movements).length === 0}
+              style={{
+                marginHorizontal: 10,
+                opacity:
+                  isLoading || Object.values(movements).length === 0 ? 0.5 : 1,
+              }}
+            >
+              <Ionicons
+                name={
+                  isLoading || Object.values(movements).length === 0
+                    ? "search-circle-outline"
+                    : "search-circle"
+                }
+                size={30}
+                color="black"
+              />
+            </TouchableOpacity>
+
+            {/* Second TouchableOpacity */}
+            <TouchableOpacity
+              onPress={() => setIsModalVisible(true)}
+              style={{
+                opacity:
+                  isLoading || Object.values(movements).length === 0 ? 0.5 : 1,
+              }}
+              disabled={isLoading || Object.values(movements).length === 0}
+            >
+              <Ionicons
+                name={
+                  isLoading || Object.values(movements).length === 0
+                    ? "funnel-outline"
+                    : "funnel"
+                }
+                size={30}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={[styles.separator, { marginBottom: 0 }]} />
       </View>
       {isLoading ? (
@@ -225,6 +378,12 @@ const DetailDebtor = ({ route }) => {
           )}
         </>
       )}
+      <SortMovementModal
+        isModalVisible={isModalVisible}
+        hideModal={hideModal}
+        sortingValues={sortingValues}
+        setSortingValues={setSortingValues}
+      />
     </View>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import AsyncStorage from "@react-native-async-storage/async-storage";
+//import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
   View,
@@ -10,13 +10,9 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-const SortModal = ({
+const SortMovementModal = ({
   isModalVisible,
   hideModal,
-  sortingOrder,
-  setSortingOrder,
-  selectedOption,
-  setSelectedOption,
   sortingValues,
   setSortingValues,
 }) => {
@@ -29,11 +25,9 @@ const SortModal = ({
     // Toggle sorting order when an option is pressed
     hideModal();
 
-    setSelectedOption(option);
-
     // Update sortingOrder with the new value
-    const newSortingOrder = sortingOrder === "Asc" ? "Desc" : "Asc";
-    setSortingOrder(newSortingOrder);
+    const newSortingOrder =
+      sortingValues.sortingOrder === "Asc" ? "Desc" : "Asc";
 
     // Guardar selectedOption y sortingOrder en un nuevo objeto
     const sortingValuesObject = {
@@ -46,14 +40,6 @@ const SortModal = ({
     setSortingValues(sortingValuesObject);
 
     // Guardar el objeto en AsyncStorage
-    try {
-      await AsyncStorage.setItem(
-        "sortingValues",
-        JSON.stringify(sortingValuesObject)
-      );
-    } catch (error) {
-      console.error("Error saving data to AsyncStorage:", error);
-    }
 
     // Resto de tu lógica...
   };
@@ -69,37 +55,36 @@ const SortModal = ({
       <TouchableWithoutFeedback onPress={handlePressOutside}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.title}>Ordenar ({sortingOrder}):</Text>
+            <Text style={styles.title}>
+              Ordenar ({sortingValues.sortingOrder}):
+            </Text>
 
             {/* Options */}
-            {[
-              "Alfabeticamente",
-              "Fecha del movimiento",
-              "Fecha de creación",
-              "Deuda",
-            ].map((option, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && <View style={styles.separator} />}
-                <TouchableOpacity
-                  style={styles.option}
-                  onPress={() => handleSortOptionPress(option)}
-                >
-                  <Text
-                    style={[
-                      styles.optionText,
-                      {
-                        fontFamily:
-                          option === selectedOption
-                            ? "Montserrat-Bold"
-                            : "Montserrat-Regular",
-                      },
-                    ]}
+            {["Fecha del movimiento", "Fecha de creación", "Deuda"].map(
+              (option, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && <View style={styles.separator} />}
+                  <TouchableOpacity
+                    style={styles.option}
+                    onPress={() => handleSortOptionPress(option)}
                   >
-                    {option}
-                  </Text>
-                </TouchableOpacity>
-              </React.Fragment>
-            ))}
+                    <Text
+                      style={[
+                        styles.optionText,
+                        {
+                          fontFamily:
+                            option === sortingValues.selectedOption
+                              ? "Montserrat-Bold"
+                              : "Montserrat-Regular",
+                        },
+                      ]}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                </React.Fragment>
+              )
+            )}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -139,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SortModal;
+export default SortMovementModal;
