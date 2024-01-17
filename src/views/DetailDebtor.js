@@ -187,7 +187,8 @@ const DetailDebtor = ({ route }) => {
       });
 
       // Formatear el campo fecha
-      const formattedFecha = new Date(parseInt(fecha, 10)).toLocaleDateString();
+
+      const formattedFecha = new Date(fecha).toLocaleDateString();
 
       // Realizar la búsqueda en los tres campos
       return (

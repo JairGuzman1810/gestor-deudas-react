@@ -111,7 +111,7 @@ export const updateMovement = async (
       const movementData = {
         importe: parseFloat(amount),
         descripcion: description,
-        fecha: date,
+        fecha: date.getTime(),
       };
 
       await update(movementRef, movementData);

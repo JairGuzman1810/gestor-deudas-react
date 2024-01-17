@@ -16,6 +16,7 @@ import { FlatList, TextInput } from "react-native-gesture-handler";
 import DebtorItem from "../components/DebtorItem";
 import SortDebtorModal from "../components/SortDebtorModal";
 import { getAllDebtors } from "../utils/DebtorHelper";
+import { printDebtors } from "../utils/PrintUtils";
 
 const Home = () => {
   const [debtors, setDebtors] = useState({});
@@ -215,9 +216,7 @@ const Home = () => {
                 isLoading || Object.values(debtors).length === 0 ? 0.5 : 1,
             },
           ]}
-          onPress={() => {
-            /* Handle filter button press */
-          }}
+          onPress={() => printDebtors(debtors)}
         >
           <Ionicons
             name={
