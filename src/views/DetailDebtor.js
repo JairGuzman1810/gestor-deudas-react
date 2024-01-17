@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, TextInput } from "react-native-gesture-handler";
 
 import MovementItem from "../components/MovementItem";
 import SortMovementModal from "../components/SortMovementModal";
@@ -28,6 +28,9 @@ const DetailDebtor = ({ route }) => {
     selectedOption: "Fecha del movimiento",
     sortingOrder: "Asc",
   });
+  const [search, setSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const { debtor } = route.params;
 
@@ -164,6 +167,40 @@ const DetailDebtor = ({ route }) => {
     setIsModalVisible(false);
   };
 
+  const filteredMovements = Object.values(movements).filter((movement) => {
+    // Verificar que movement no sea undefined y que los campos necesarios no sean undefined
+    const descripcion = movement?.descripcion;
+    const importe = movement?.importe;
+    const fecha = movement?.fecha;
+
+    if (
+      descripcion !== undefined &&
+      importe !== undefined &&
+      fecha !== undefined
+    ) {
+      // Formatear el campo importe
+      const formattedImporte = importe.toLocaleString(undefined, {
+        style: "currency",
+        currency: "USD", // Puedes cambiarlo según tu moneda
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      // Formatear el campo fecha
+      const formattedFecha = new Date(parseInt(fecha, 10)).toLocaleDateString();
+
+      // Realizar la búsqueda en los tres campos
+      return (
+        descripcion.toLowerCase().includes(search && search.toLowerCase()) ||
+        formattedImporte.toString().includes(search) ||
+        formattedImporte.replace(/,/g, "").includes(search) || // Búsqueda sin comas
+        formattedFecha.toString().includes(search)
+      );
+    }
+
+    return false;
+  });
+
   return (
     <View style={styles.container}>
       {/* HEADER */}
@@ -260,10 +297,12 @@ const DetailDebtor = ({ route }) => {
                 },
               ]}
             >
-              $
-              {debtor.deudaindividual
-                .toFixed(2)
-                .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+              {debtor.deudaindividual.toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD", // Puedes cambiarlo según tu moneda
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </Text>
           </View>
           <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
@@ -298,6 +337,14 @@ const DetailDebtor = ({ route }) => {
             {/* First TouchableOpacity */}
             <TouchableOpacity
               disabled={isLoading || Object.values(movements).length === 0}
+              onPress={() => {
+                //desactivar/activar la barra de busqueda.
+                setIsSearching(!isSearching);
+                //Siempre true para que se active el teclado.
+                setSearchFocused(true);
+                //Vaciamos para no quede busqueda anterior.
+                setSearch("");
+              }}
               style={{
                 marginHorizontal: 10,
                 opacity:
@@ -306,7 +353,9 @@ const DetailDebtor = ({ route }) => {
             >
               <Ionicons
                 name={
-                  isLoading || Object.values(movements).length === 0
+                  isSearching ||
+                  isLoading ||
+                  Object.values(movements).length === 0
                     ? "search-circle-outline"
                     : "search-circle"
                 }
@@ -339,11 +388,23 @@ const DetailDebtor = ({ route }) => {
 
         <View style={[styles.separator, { marginBottom: 0 }]} />
       </View>
+      {/* BARRA DE BUSQUEDA */}
+      {isSearching && (
+        <View style={styles.input}>
+          <TextInput
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            style={styles.textinput}
+            placeholder="Buscar"
+            autoFocus={searchFocused}
+          />
+        </View>
+      )}
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} size="large" color="#808080" />
       ) : (
         <>
-          {Object.values(movements).length === 0 ? (
+          {Object.values(movements).length === 0 && !isSearching ? (
             <View style={styles.noMovementsContainer}>
               <Text style={styles.noMovementsText}>
                 Sin movimientos. Haga su primer movimiento con los botones
@@ -367,9 +428,16 @@ const DetailDebtor = ({ route }) => {
                 </View>
               </View>
             </View>
+          ) : filteredMovements.length === 0 ? (
+            <View style={styles.noMovementsContainer}>
+              <Text style={styles.noMovementsText}>
+                Sin registros con el nombre:
+              </Text>
+              <Text style={styles.noMovementsText}>"{search}"</Text>
+            </View>
           ) : (
             <FlatList
-              data={Object.values(movements)}
+              data={isSearching ? filteredMovements : Object.values(movements)}
               keyExtractor={(item) => item.uid}
               renderItem={({ item }) => (
                 <MovementItem movement={item} debtor={debtor} />
@@ -531,5 +599,24 @@ const styles = StyleSheet.create({
   },
   noMovementsButtons: {
     flexDirection: "row",
+  },
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginHorizontal: 4,
+    fontSize: 18,
+    flexDirection: "row",
+    fontFamily: "Montserrat-Regular",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 4,
+  },
+  textinput: {
+    flex: 1,
+    fontFamily: "Montserrat-Regular",
+    fontSize: 14,
+    height: "100%",
   },
 });

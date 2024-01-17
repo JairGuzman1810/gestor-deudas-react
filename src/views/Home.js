@@ -19,7 +19,7 @@ import { getAllDebtors } from "../utils/DebtorHelper";
 
 const Home = () => {
   const [debtors, setDebtors] = useState({});
-  const [isSearching, setIsSerching] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [totalDebt, setTotalDebt] = useState(0);
   const [search, setSearch] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
@@ -38,7 +38,7 @@ const Home = () => {
       .then((storedSearchText) => {
         if (storedSearchText) {
           setSearch(storedSearchText);
-          setIsSerching(true);
+          setIsSearching(true);
           setSearchFocused(false);
         }
       })
@@ -159,7 +159,7 @@ const Home = () => {
   useEffect(() => {
     //Si borra elementos y se esta buscando cierra el buscador.
     if (Object.values(debtors).length === 0) {
-      setIsSerching(false);
+      setIsSearching(false);
     }
   }, [debtors]);
 
@@ -244,7 +244,7 @@ const Home = () => {
           ]}
           onPress={() => {
             //desactivar/activar la barra de busqueda.
-            setIsSerching(!isSearching);
+            setIsSearching(!isSearching);
             //Siempre true para que se active el teclado.
             setSearchFocused(true);
             //Vaciamos para no quede busqueda anterior.
@@ -355,7 +355,12 @@ const Home = () => {
               },
             ]}
           >
-            ${totalDebt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+            {parseFloat(totalDebt).toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD", // Puedes cambiarlo según tu moneda
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Text>
         </View>
       </View>

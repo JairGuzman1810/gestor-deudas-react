@@ -78,13 +78,12 @@ const DebtorItem = ({ debtor }) => {
                 },
               ]}
             >
-              $
-              {debtor.deudaindividual !== undefined
-                ? debtor.deudaindividual.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                : "0"}
+              {parseFloat(debtor.deudaindividual).toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD", // Puedes cambiarlo según tu moneda
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </Text>
             <Text style={styles.date}>
               {debtor.ultimomovimiento !== undefined &&

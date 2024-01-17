@@ -43,9 +43,9 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
         console.log("Delete successful");
 
         if (Platform.OS === "android") {
-          ToastAndroid.show("Deudor eliminado con exíto", ToastAndroid.SHORT);
+          ToastAndroid.show("Deudor eliminado con exíto.", ToastAndroid.SHORT);
         } else {
-          Alert.alert("Deudor eliminado con exíto");
+          Alert.alert("Deudor eliminado con exíto.");
         }
 
         hideModal();

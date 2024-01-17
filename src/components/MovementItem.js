@@ -53,7 +53,12 @@ const MovementItem = ({ movement, debtor }) => {
               },
             ]}
           >
-            ${movement.importe.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+            {movement.importe.toLocaleString(undefined, {
+              style: "currency",
+              currency: "USD", // Puedes cambiarlo según tu moneda
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
           </Text>
           <Text
             style={[

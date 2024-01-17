@@ -18,15 +18,6 @@ import {
 import MovementModal from "../components/MovementModal";
 import { updateMovement } from "../utils/MovementsHelper";
 
-const formatCurrency = (value) => {
-  return value.toLocaleString(undefined, {
-    style: "currency",
-    currency: "USD", // Puedes cambiarlo según tu moneda
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-};
-
 const EditMovement = ({ route }) => {
   const { movement, debtor, isPayment } = route.params;
   const [amount, setAmount] = useState(Math.abs(movement.importe).toString());
@@ -253,9 +244,18 @@ const EditMovement = ({ route }) => {
             { color: isPayment ? "#1A7A13" : "#B11D1D" },
           ]}
         >
-          {formatCurrency(
-            parseFloat(amount.replace(/,/g, "").replace(/[^0-9.]/g, "")) || 0
-          )}
+          {parseFloat(
+            isPayment
+              ? amount === ""
+                ? 0
+                : amount
+              : -(amount === "" ? 0 : amount)
+          ).toLocaleString(undefined, {
+            style: "currency",
+            currency: "USD", // Puedes cambiarlo según tu moneda
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </Text>
       </View>
       {/* Descripcion */}
