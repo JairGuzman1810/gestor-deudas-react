@@ -168,11 +168,40 @@ const Home = () => {
     setIsModalVisible(false);
   };
 
-  const filteredDebtors = Object.values(debtors).filter(
-    (debtor) =>
-      debtor.nombre !== undefined &&
-      debtor.nombre.toLowerCase().includes(search && search.toLowerCase())
-  );
+  const filteredDebtors = Object.values(debtors).filter((debtor) => {
+    const nombre = debtor?.nombre;
+    const deudaindividual = debtor?.deudaindividual;
+    const ultimomovimiento = debtor?.ultimomovimiento;
+
+    if (
+      nombre !== undefined &&
+      ultimomovimiento !== undefined &&
+      deudaindividual !== undefined
+    ) {
+      const formattedUltimoMovimiento = new Date(
+        ultimomovimiento
+      ).toLocaleString();
+
+      const formattedDeudaindividual = deudaindividual.toLocaleString(
+        undefined,
+        {
+          style: "currency",
+          currency: "USD", // Puedes cambiarlo según tu moneda
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      );
+
+      return (
+        nombre.toLowerCase().includes(search && search.toLowerCase()) ||
+        formattedDeudaindividual.toString().includes(search) ||
+        formattedDeudaindividual.replace(/,/g, "").includes(search) || // Búsqueda sin comas
+        formattedUltimoMovimiento.includes(search)
+      );
+    }
+
+    return false;
+  });
 
   const handleSearchChange = (newSearchText) => {
     setSearch(newSearchText);
@@ -216,7 +245,9 @@ const Home = () => {
                 isLoading || Object.values(debtors).length === 0 ? 0.5 : 1,
             },
           ]}
-          onPress={() => printDebtors(debtors)}
+          onPress={() =>
+            printDebtors(isSearching ? filteredDebtors : Object.values(debtors))
+          }
         >
           <Ionicons
             name={

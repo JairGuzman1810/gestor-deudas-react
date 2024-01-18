@@ -18,6 +18,7 @@ import { FlatList, TextInput } from "react-native-gesture-handler";
 import MovementItem from "../components/MovementItem";
 import SortMovementModal from "../components/SortMovementModal";
 import { fetchMovements } from "../utils/MovementsHelper";
+import { printMovements } from "../utils/PrintUtils";
 
 const DetailDebtor = ({ route }) => {
   const navigation = useNavigation();
@@ -231,7 +232,10 @@ const DetailDebtor = ({ route }) => {
             },
           ]}
           onPress={() => {
-            /* Handle filter button press */
+            printMovements(
+              debtor,
+              isSearching ? filteredMovements : Object.values(movements)
+            );
           }}
         >
           <Ionicons
