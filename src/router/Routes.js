@@ -62,9 +62,10 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="ChangePassword"
-          component={ChangePassword}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <ChangePassword {...props} user={user} />}
+        </Drawer.Screen>
         <Drawer.Screen
           name="NewDebtor"
           component={NewDebtor}
