@@ -32,6 +32,11 @@ const DrawerContentAdmin = (props) => {
     props.navigation.navigate("ChangePassword");
   };
 
+  const handleCreateUser = () => {
+    // Agrega aquí la lógica para cambiar la contraseña
+    props.navigation.navigate("CreateUser");
+  };
+
   return (
     <DrawerContentScrollView style={styles.drawerContent} {...props}>
       <View style={styles.userInfoContainer}>
@@ -52,7 +57,7 @@ const DrawerContentAdmin = (props) => {
           <Ionicons name="person" size={24} color="black" />
           <Text style={styles.actionText}>Mis Usuarios</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionItem}>
+        <TouchableOpacity style={styles.actionItem} onPress={handleCreateUser}>
           <Ionicons name="person-add" size={24} color="black" />
           <Text style={styles.actionText}>Crear Usuarios</Text>
         </TouchableOpacity>
