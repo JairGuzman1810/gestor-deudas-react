@@ -53,11 +53,11 @@ const DrawerContentUser = (props) => {
           style={styles.actionItem}
           onPress={handleChangePassword}
         >
-          <Ionicons name="lock-closed-outline" size={24} color="black" />
+          <Ionicons name="lock-open" size={24} color="black" />
           <Text style={styles.actionText}>Cambiar Contraseña</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionItem} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color="black" />
+          <Ionicons name="log-out" size={24} color="black" />
           <Text style={styles.actionText}>Cerrar Sesión</Text>
         </TouchableOpacity>
       </View>
