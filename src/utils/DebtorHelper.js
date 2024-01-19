@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { onValue, push, ref, set, update, remove } from "firebase/database";
+import { push, ref, set, update, remove, get } from "firebase/database";
 
 import { deleteAllMovements } from "./MovementsHelper";
 import { FIREBASE_DATABASE, FIREBASE_AUTH } from "../../firebaseConfig";
@@ -99,26 +99,27 @@ export const deleteDebtor = async (debtorUID) => {
   }
 };
 
-export const getAllDebtors = (setDebtors) => {
+export const getAllDebtors = async () => {
   const user = FIREBASE_AUTH.currentUser;
 
   if (user) {
     const userUID = user.uid;
     const userDatabaseRef = ref(FIREBASE_DATABASE, `Deudores/${userUID}`);
 
-    // Setup the real-time listener and get the reference
-    const unsubscribe = onValue(userDatabaseRef, (snapshot) => {
+    try {
+      // Obtener los datos en un momento dado
+      const snapshot = await get(userDatabaseRef);
       const debtors = snapshot.val();
 
       if (debtors) {
-        setDebtors(debtors);
+        return debtors;
       } else {
-        setDebtors({});
+        return {};
       }
-    });
-
-    // Return the reference to the listener
-    return unsubscribe;
+    } catch (error) {
+      console.error("Error fetching debtors:", error);
+      throw error;
+    }
   } else {
     console.log("No hay un usuario conectado");
     return null; // Return null if no user is connected

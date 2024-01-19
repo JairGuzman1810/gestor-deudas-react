@@ -10,8 +10,9 @@ import {
   StyleSheet,
   Platform,
   ActivityIndicator,
+  FlatList,
+  TextInput,
 } from "react-native";
-import { FlatList, TextInput } from "react-native-gesture-handler";
 
 import DebtorItem from "../components/DebtorItem";
 import SortDebtorModal from "../components/SortDebtorModal";
@@ -32,6 +33,7 @@ const Home = () => {
     selectedOption,
     sortingOrder,
   });
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     // Fetch the saved search text from AsyncStorage on component mount
@@ -46,79 +48,87 @@ const Home = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
+  const fetchDataAndSort = async () => {
     let storedSortingValues;
-    const fetchData = async () => {
-      try {
-        // Recuperar la cadena JSON de sortingValues desde AsyncStorage
-        const storedSortingValuesString =
-          await AsyncStorage.getItem("sortingValues");
 
-        // Si hay una cadena JSON válida, convertirla a un objeto
-        if (storedSortingValuesString) {
-          storedSortingValues = JSON.parse(storedSortingValuesString);
+    try {
+      // Recuperar la cadena JSON de sortingValues desde AsyncStorage
+      const storedSortingValuesString =
+        await AsyncStorage.getItem("sortingValues");
 
-          // Actualizar el estado con los valores recuperados
-        }
-      } catch (error) {
-        console.error("Error fetching data from AsyncStorage:", error);
+      // Si hay una cadena JSON válida, convertirla a un objeto
+      if (storedSortingValuesString) {
+        storedSortingValues = JSON.parse(storedSortingValuesString);
+
+        // Actualizar el estado con los valores recuperados
+      }
+    } catch (error) {
+      console.error("Error fetching data from AsyncStorage:", error);
+      // Manejar el error según sea necesario
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const debtors = await getAllDebtors();
+
+      const debtorsArray = Object.values(debtors);
+      // Handle the sorting logic based on the selected option
+      const sortedDebtors = [...debtorsArray];
+
+      switch (storedSortingValues.selectedOption) {
+        case "Alfabeticamente":
+          sortedDebtors.sort((a, b) =>
+            storedSortingValues.sortingOrder === "Asc"
+              ? a.nombre.localeCompare(b.nombre)
+              : b.nombre.localeCompare(a.nombre)
+          );
+          break;
+        case "Fecha del movimiento":
+          sortedDebtors.sort((a, b) =>
+            storedSortingValues.sortingOrder === "Asc"
+              ? a.ultimomovimiento - b.ultimomovimiento
+              : b.ultimomovimiento - a.ultimomovimiento
+          );
+          break;
+        case "Fecha de creación":
+          sortedDebtors.sort((a, b) =>
+            storedSortingValues.sortingOrder === "Asc"
+              ? a.creado - b.creado
+              : b.creado - a.creado
+          );
+          break;
+        case "Deuda":
+          sortedDebtors.sort((a, b) =>
+            storedSortingValues.sortingOrder === "Asc"
+              ? a.deudaindividual - b.deudaindividual
+              : b.deudaindividual - a.deudaindividual
+          );
+          break;
+        default:
+          break;
       }
 
-      // Set up the real-time listener and get the unsubscribe function
-      setIsLoading(true);
-
-      getAllDebtors((debtors) => {
-        const debtorsArray = Object.values(debtors);
-        // Handle the sorting logic based on the selected option
-        const sortedDebtors = [...debtorsArray];
-
-        switch (storedSortingValues.selectedOption) {
-          case "Alfabeticamente":
-            sortedDebtors.sort((a, b) =>
-              storedSortingValues.sortingOrder === "Asc"
-                ? a.nombre.localeCompare(b.nombre)
-                : b.nombre.localeCompare(a.nombre)
-            );
-            break;
-          case "Fecha del movimiento":
-            sortedDebtors.sort((a, b) =>
-              storedSortingValues.sortingOrder === "Asc"
-                ? a.ultimomovimiento - b.ultimomovimiento
-                : b.ultimomovimiento - a.ultimomovimiento
-            );
-            break;
-          case "Fecha de creación":
-            sortedDebtors.sort((a, b) =>
-              storedSortingValues.sortingOrder === "Asc"
-                ? a.creado - b.creado
-                : b.creado - a.creado
-            );
-            break;
-          case "Deuda":
-            sortedDebtors.sort((a, b) =>
-              storedSortingValues.sortingOrder === "Asc"
-                ? a.deudaindividual - b.deudaindividual
-                : b.deudaindividual - a.deudaindividual
-            );
-            break;
-          default:
-            break;
-        }
-
-        // Convert the sorted array back to an object
-        const sortedDebtorsObject = {};
-        sortedDebtors.forEach((debtor) => {
-          sortedDebtorsObject[debtor.uid] = debtor;
-        });
-
-        setDebtors(sortedDebtorsObject);
-        setIsLoading(false);
+      // Convert the sorted array back to an object
+      const sortedDebtorsObject = {};
+      sortedDebtors.forEach((debtor) => {
+        sortedDebtorsObject[debtor.uid] = debtor;
       });
-    };
 
+      setDebtors(sortedDebtorsObject);
+    } catch (error) {
+      console.error("Error fetching debtors:", error);
+      // Manejar el error según sea necesario
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     // Llamar a la función para realizar las consultas al montar el componente
-    fetchData();
-  }, [sortingValues]); // Escucha los cambios en sortingValues
+    fetchDataAndSort();
+  }, [sortingValues]);
 
   useEffect(() => {
     const fetchSortData = async () => {
@@ -361,6 +371,8 @@ const Home = () => {
             <FlatList
               data={isSearching ? filteredDebtors : Object.values(debtors)}
               keyExtractor={(item) => item.uid}
+              refreshing={isRefreshing}
+              onRefresh={fetchDataAndSort}
               renderItem={({ item }) => <DebtorItem debtor={item} />}
             />
           )}
