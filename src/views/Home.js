@@ -69,6 +69,7 @@ const Home = () => {
     }
 
     setIsLoading(true);
+    setIsRefreshing(true);
 
     try {
       const debtors = await getAllDebtors();
@@ -122,6 +123,7 @@ const Home = () => {
       // Manejar el error según sea necesario
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 

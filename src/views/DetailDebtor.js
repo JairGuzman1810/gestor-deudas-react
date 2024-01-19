@@ -12,8 +12,9 @@ import {
   ToastAndroid,
   TouchableOpacity,
   View,
+  FlatList,
+  TextInput,
 } from "react-native";
-import { FlatList, TextInput } from "react-native-gesture-handler";
 
 import MovementItem from "../components/MovementItem";
 import SortMovementModal from "../components/SortMovementModal";
@@ -32,6 +33,7 @@ const DetailDebtor = ({ route }) => {
   const [search, setSearch] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { debtor } = route.params;
 
@@ -43,96 +45,60 @@ const DetailDebtor = ({ route }) => {
     setIsLoading(true);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchMovements(debtor);
+  const fetchData = async () => {
+    setIsRefreshing(true);
+    setIsLoading(true);
 
-        const movementsArray = Object.values(data);
-        // Handle the sorting logic based on the selected option
-        const sortedMovements = [...movementsArray];
+    try {
+      const data = await fetchMovements(debtor);
 
-        switch (sortingValues.selectedOption) {
-          case "Fecha del movimiento":
-            sortedMovements.sort((a, b) =>
-              sortingValues.sortingOrder === "Asc"
-                ? a.ultimomovimiento - b.ultimomovimiento
-                : b.ultimomovimiento - a.ultimomovimiento
-            );
-            break;
-          case "Fecha de creación":
-            sortedMovements.sort((a, b) =>
-              sortingValues.sortingOrder === "Asc"
-                ? a.creado - b.creado
-                : b.creado - a.creado
-            );
-            break;
-          case "Deuda":
-            sortedMovements.sort((a, b) =>
-              sortingValues.sortingOrder === "Asc"
-                ? a.deudaindividual - b.deudaindividual
-                : b.deudaindividual - a.deudaindividual
-            );
-            break;
-          default:
-            break;
-        }
+      const movementsArray = Object.values(data);
+      // Handle the sorting logic based on the selected option
+      const sortedMovements = [...movementsArray];
 
-        // Convert the sorted array back to an object
-        const sortedMovementsObject = {};
-        sortedMovements.forEach((debtor) => {
-          sortedMovementsObject[debtor.uid] = debtor;
-        });
-
-        setMovements(sortedMovementsObject);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+      switch (sortingValues.selectedOption) {
+        case "Fecha del movimiento":
+          sortedMovements.sort((a, b) =>
+            sortingValues.sortingOrder === "Asc"
+              ? a.ultimomovimiento - b.ultimomovimiento
+              : b.ultimomovimiento - a.ultimomovimiento
+          );
+          break;
+        case "Fecha de creación":
+          sortedMovements.sort((a, b) =>
+            sortingValues.sortingOrder === "Asc"
+              ? a.creado - b.creado
+              : b.creado - a.creado
+          );
+          break;
+        case "Deuda":
+          sortedMovements.sort((a, b) =>
+            sortingValues.sortingOrder === "Asc"
+              ? a.deudaindividual - b.deudaindividual
+              : b.deudaindividual - a.deudaindividual
+          );
+          break;
+        default:
+          break;
       }
-    };
 
-    fetchData();
-  }, []);
+      // Convert the sorted array back to an object
+      const sortedMovementsObject = {};
+      sortedMovements.forEach((debtor) => {
+        sortedMovementsObject[debtor.uid] = debtor;
+      });
+
+      setMovements(sortedMovementsObject);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const movementsArray = Object.values(movements);
-    // Handle the sorting logic based on the selected option
-    const sortedMovements = [...movementsArray];
-
-    switch (sortingValues.selectedOption) {
-      case "Fecha del movimiento":
-        sortedMovements.sort((a, b) =>
-          sortingValues.sortingOrder === "Asc"
-            ? a.fecha - b.fecha
-            : b.fecha - a.fecha
-        );
-        break;
-      case "Fecha de creación":
-        sortedMovements.sort((a, b) =>
-          sortingValues.sortingOrder === "Asc"
-            ? a.creado - b.creado
-            : b.creado - a.creado
-        );
-        break;
-      case "Deuda":
-        sortedMovements.sort((a, b) =>
-          sortingValues.sortingOrder === "Asc"
-            ? a.importe - b.importe
-            : b.importe - a.importe
-        );
-        break;
-      default:
-        break;
-    }
-
-    // Convert the sorted array back to an object
-    const sortedMovementsObject = {};
-    sortedMovements.forEach((debtor) => {
-      sortedMovementsObject[debtor.uid] = debtor;
-    });
-
-    setMovements(sortedMovementsObject);
+    fetchData();
   }, [sortingValues]);
 
   const doCall = () => {
@@ -444,6 +410,8 @@ const DetailDebtor = ({ route }) => {
             <FlatList
               data={isSearching ? filteredMovements : Object.values(movements)}
               keyExtractor={(item) => item.uid}
+              refreshing={isRefreshing}
+              onRefresh={fetchData}
               renderItem={({ item }) => (
                 <MovementItem movement={item} debtor={debtor} />
               )}
