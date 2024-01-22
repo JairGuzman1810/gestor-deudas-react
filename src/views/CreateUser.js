@@ -1,16 +1,27 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import React, { useState } from "react";
 import {
+  Alert,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
 
-const CreateUser = () => {
+import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { addUser } from "../utils/UserHelpers";
+
+const CreateUser = ({ user }) => {
+  const auth = FIREBASE_AUTH;
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +29,46 @@ const CreateUser = () => {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [hidePass, setHidePass] = useState(true);
   const [hideRepeatPass, setHideRepeatPass] = useState(true);
+
+  const showToast = (title, message) => {
+    if (Platform.OS === "android") {
+      ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      );
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
+  const createAccount = async () => {
+    if (password !== repeatPassword) {
+      showToast("Error", "Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      // Crear cuenta en Firebase Auth
+      await createUserWithEmailAndPassword(auth, email, password);
+
+      //Agregar información a la bd.
+      await addUser(name, email, password);
+
+      // Cerrar sesión
+      await auth.signOut();
+
+      // Iniciar sesión con el admin usuario
+      await signInWithEmailAndPassword(auth, user.correo, user.contraseña);
+
+      // Mostrar mensaje de éxito
+      showToast("Éxito", "Usuario creado correctamente");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
+  };
 
   const goBack = () => {
     navigation.reset({
@@ -147,6 +198,7 @@ const CreateUser = () => {
         }
       >
         <TouchableOpacity
+          onPress={createAccount}
           disabled={
             name === "" ||
             email === "" ||

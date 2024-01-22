@@ -24,7 +24,10 @@ const DrawerContentAdmin = (props) => {
 
     // Navegar de vuelta a la pantalla de inicio (Login)
     auth.signOut();
-    props.navigation.navigate("Login");
+    props.navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
   };
 
   const handleChangePassword = () => {

@@ -94,9 +94,10 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="CreateUser"
-          component={CreateUser}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <CreateUser {...props} user={user} />}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );

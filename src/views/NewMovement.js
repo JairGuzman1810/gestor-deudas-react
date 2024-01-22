@@ -12,8 +12,8 @@ import {
   Pressable,
   ToastAndroid,
   Alert,
+  TextInput
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 
 import { addMovement } from "../utils/MovementsHelper";
 
