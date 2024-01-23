@@ -276,7 +276,7 @@ const DetailDebtor = ({ route }) => {
               })}
             </Text>
           </View>
-          <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
+          <View style={[styles.button, { backgroundColor: "#1A7A13" }]}>
             <TouchableOpacity
               onPress={newPayment}
               style={styles.touchableOpacity}
@@ -381,7 +381,7 @@ const DetailDebtor = ({ route }) => {
                 Sin movimientos. Haga su primer movimiento con los botones
               </Text>
               <View style={styles.noMovementsButtons}>
-                <View style={[styles.button, { backgroundColor: "#4e9316" }]}>
+                <View style={[styles.button, { backgroundColor: "#1A7A13" }]}>
                   <TouchableOpacity
                     onPress={newPayment}
                     style={styles.touchableOpacity}
@@ -484,14 +484,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   leftnamecontainer: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
   },
   rightnamecontainer: {
+    flex: 1,
     flexDirection: "row",
   },
   name: {
     marginLeft: 2,
+    flex: 1,
     fontFamily: "Montserrat-Bold",
     fontSize: 20,
     color: "#000",
@@ -529,7 +532,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: "#4e9316",
     borderRadius: 10,
     height: 50,
     marginRight: 5,
@@ -569,6 +571,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     marginBottom: 10,
+    marginHorizontal: 10,
   },
   noMovementsButtons: {
     flexDirection: "row",

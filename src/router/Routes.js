@@ -12,6 +12,7 @@ import EditDebtor from "../views/EditDebtor";
 import EditMovement from "../views/EditMovement";
 import Home from "../views/Home";
 import Login from "../views/Login";
+import MyUsers from "../views/MyUsers";
 import NewDebtor from "../views/NewDebtor";
 import NewMovement from "../views/NewMovement";
 import Splashscreen from "../views/Splashscreen";
@@ -98,6 +99,11 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         >
           {(props) => <CreateUser {...props} user={user} />}
         </Drawer.Screen>
+        <Drawer.Screen
+          name="MyUsers"
+          component={MyUsers}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );

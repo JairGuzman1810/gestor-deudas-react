@@ -40,6 +40,19 @@ const DebtorItem = ({ debtor }) => {
         },
       ]}
     >
+      <View
+        style={[
+          styles.indicator,
+          {
+            backgroundColor:
+              debtor.deudaindividual === 0
+                ? "#30BFBF"
+                : debtor.deudaindividual > 0
+                  ? "#1A7A13"
+                  : "#B11D1D",
+          },
+        ]}
+      />
       <TouchableOpacity
         style={styles.content}
         activeOpacity={0.5}
@@ -48,19 +61,6 @@ const DebtorItem = ({ debtor }) => {
         delayLongPress={500} // Adjust the delay as needed
       >
         <View style={styles.leftcontainer}>
-          <View
-            style={[
-              styles.indicator,
-              {
-                backgroundColor:
-                  debtor.deudaindividual === 0
-                    ? "#30BFBF"
-                    : debtor.deudaindividual > 0
-                      ? "#1A7A13"
-                      : "#B11D1D",
-              },
-            ]}
-          />
           <Text style={styles.name}>{debtor.nombre}</Text>
         </View>
         <View style={styles.rightcontainer}>
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginBottom: 5,
     borderRadius: 2,
+    flexDirection: "row",
     borderTopStartRadius: 4,
     borderBottomStartRadius: 4,
     ...Platform.select({
@@ -126,9 +127,10 @@ const styles = StyleSheet.create({
     }),
   },
   content: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    height: 65,
+    paddingVertical: 10,
   },
   leftcontainer: {
     flexDirection: "row",
@@ -139,16 +141,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "flex-end", // Align to the right edge
-    justifyContent: "flex-end", // Align to the bottom
+    justifyContent: "center", // Align to the bottom
   },
   rightcontent: {
     alignItems: "flex-end", // Align to the right within the column
-    justifyContent: "flex-end", // Align to the bottom
-    height: "100%", // Added height property to take up full height
+    justifyContent: "center", // Align to the bottom
+    // Added height property to take up full height
   },
   indicator: {
     width: 6,
-    height: "100%",
     borderTopStartRadius: 4,
     borderBottomStartRadius: 4,
   },

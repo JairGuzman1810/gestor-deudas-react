@@ -34,7 +34,7 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
     }
   };
 
-  const handleUpdateDebtor = async () => {
+  const handleDeleteDebtor = async () => {
     // Comparar con los valores originales
     try {
       const result = await deleteDebtor(debtor.uid);
@@ -42,13 +42,18 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
       if (result) {
         console.log("Delete successful");
 
+        hideModal();
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Home" }],
+        });
+
         if (Platform.OS === "android") {
           ToastAndroid.show("Deudor eliminado con exíto.", ToastAndroid.SHORT);
         } else {
           Alert.alert("Deudor eliminado con exíto.");
         }
-
-        hideModal();
       } else {
         console.log("Delete failed");
 
@@ -113,7 +118,7 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
           <View style={styles.deleteButton}>
             <TouchableOpacity
               style={styles.touchableOpacity}
-              onLongPress={handleUpdateDebtor}
+              onLongPress={handleDeleteDebtor}
               onPress={showMessageWarning}
             >
               <Text style={styles.buttonText}>Eliminar</Text>

@@ -68,3 +68,34 @@ export const updatePass = async (password) => {
     return false; // Retorna false en caso de error durante la actualización
   }
 };
+
+export const getAllUsers = async () => {
+  const user = FIREBASE_AUTH.currentUser;
+
+  if (user) {
+    const userUID = user.uid;
+    const userDatabaseRef = ref(FIREBASE_DATABASE, `Usuarios`);
+
+    try {
+      // Obtener los datos en un momento dado
+      const snapshot = await get(userDatabaseRef);
+      const allUsers = snapshot.val();
+
+      if (allUsers) {
+        // Eliminar el usuario localmente
+        const updatedUsers = { ...allUsers };
+        delete updatedUsers[userUID];
+
+        return updatedUsers;
+      } else {
+        return {};
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      throw error;
+    }
+  } else {
+    console.log("No hay un usuario conectado");
+    return null; // Return null if no user is connected
+  }
+};

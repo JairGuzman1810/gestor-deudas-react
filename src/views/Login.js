@@ -111,7 +111,7 @@ const Login = ({ setUser, setUserLoggedIn }) => {
             </View>
             {loading ? (
               // Show ActivityIndicator when loading is true
-              <ActivityIndicator size="large" color="#4e9316" />
+              <ActivityIndicator size="large" color="#1A7A13" />
             ) : (
               // Show buttons when loading is false
               <View
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   button: {
-    backgroundColor: "#4e9316",
+    backgroundColor: "#1A7A13",
     borderRadius: 5,
     marginTop: 20,
     justifyContent: "center",

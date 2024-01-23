@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    backgroundColor: "#4e9316",
+    backgroundColor: "#1A7A13",
     borderRadius: 5,
     marginTop: 20,
     marginHorizontal: 50,
