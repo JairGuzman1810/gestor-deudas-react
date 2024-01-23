@@ -18,6 +18,7 @@ import {
 } from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { decrypt } from "../utils/AESUtils";
 import { addUser } from "../utils/UserHelpers";
 
 const CreateUser = ({ user }) => {
@@ -61,10 +62,18 @@ const CreateUser = ({ user }) => {
       await auth.signOut();
 
       // Iniciar sesión con el admin usuario
-      await signInWithEmailAndPassword(auth, user.correo, user.contraseña);
+      await signInWithEmailAndPassword(
+        auth,
+        user.correo,
+        decrypt(user.contraseña, "")
+      );
 
       // Mostrar mensaje de éxito
-      showToast("Éxito", "Usuario creado correctamente");
+      showToast("Éxito", "Usuario creado correctamente.");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRepeatPassword("");
     } catch (error) {
       Alert.alert("Error", error.message);
     }

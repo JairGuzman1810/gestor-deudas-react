@@ -484,13 +484,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   leftnamecontainer: {
-    flex: 1,
+    flex: 2,
     flexDirection: "row",
     alignItems: "center",
   },
   rightnamecontainer: {
     flex: 1,
     flexDirection: "row",
+    justifyContent: "flex-end",
   },
   name: {
     marginLeft: 2,

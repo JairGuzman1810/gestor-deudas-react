@@ -1,5 +1,6 @@
 import { get, ref, set, update } from "firebase/database";
 
+import { encrypt } from "./AESUtils";
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from "../../firebaseConfig";
 
 export const fetchUser = async (user) => {
@@ -25,7 +26,7 @@ export const addUser = async (nombre, correo, contraseña) => {
         uid: userUID,
         nombre,
         correo,
-        contraseña,
+        contraseña: encrypt(contraseña, ""),
         privilegios: "user",
       };
 
@@ -52,7 +53,7 @@ export const updatePass = async (password) => {
       const userRef = ref(FIREBASE_DATABASE, `Usuarios/${userUID}`);
 
       const userData = {
-        contraseña: password,
+        contraseña: encrypt(password, ""),
       };
 
       await update(userRef, userData);
