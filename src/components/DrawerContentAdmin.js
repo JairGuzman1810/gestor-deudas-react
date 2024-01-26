@@ -31,17 +31,14 @@ const DrawerContentAdmin = (props) => {
   };
 
   const handleChangePassword = () => {
-    // Agrega aquí la lógica para cambiar la contraseña
     props.navigation.navigate("ChangePassword");
   };
 
   const handleCreateUser = () => {
-    // Agrega aquí la lógica para cambiar la contraseña
     props.navigation.navigate("CreateUser");
   };
 
   const handleMyUsers = () => {
-    // Agrega aquí la lógica para cambiar la contraseña
     props.navigation.navigate("MyUsers");
   };
 

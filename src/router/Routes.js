@@ -5,6 +5,7 @@ import { StyleSheet } from "react-native";
 
 import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
+import Action from "../views/Action";
 import ChangePassword from "../views/ChangePassword";
 import CreateUser from "../views/CreateUser";
 import DetailDebtor from "../views/DetailDebtor";
@@ -102,6 +103,11 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         <Drawer.Screen
           name="MyUsers"
           component={MyUsers}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="Action"
+          component={Action}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>

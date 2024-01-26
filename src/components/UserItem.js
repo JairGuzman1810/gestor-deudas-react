@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   StyleSheet,
@@ -8,6 +9,8 @@ import {
 } from "react-native";
 
 const UserItem = ({ user }) => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -17,7 +20,14 @@ const UserItem = ({ user }) => {
         </View>
         <View style={styles.rightcontainer}>
           <View style={styles.button}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() =>
+                navigation.navigate("Action", {
+                  user,
+                })
+              }
+            >
               <Text style={styles.buttonText}>EDITAR</Text>
             </TouchableOpacity>
           </View>
