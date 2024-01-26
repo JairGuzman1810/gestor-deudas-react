@@ -26,7 +26,7 @@ export const addUser = async (nombre, correo, contraseña) => {
         uid: userUID,
         nombre,
         correo,
-        contraseña: encrypt(contraseña, ""),
+        contraseña: encrypt(contraseña),
         privilegios: "user",
       };
 
@@ -53,7 +53,7 @@ export const updatePass = async (password) => {
       const userRef = ref(FIREBASE_DATABASE, `Usuarios/${userUID}`);
 
       const userData = {
-        contraseña: encrypt(password, ""),
+        contraseña: encrypt(password),
       };
 
       await update(userRef, userData);

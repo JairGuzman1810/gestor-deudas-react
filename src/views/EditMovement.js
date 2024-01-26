@@ -210,9 +210,7 @@ const EditMovement = ({ route }) => {
         <Text style={styles.contenttitle}>Nombre</Text>
         <View style={styles.separator} />
         <View style={styles.namecontainer}>
-          <TouchableOpacity>
-            <Ionicons name="person" size={18} color="black" />
-          </TouchableOpacity>
+          <Ionicons name="person" size={18} color="black" />
           <Text style={styles.name}>{debtor.nombre}</Text>
         </View>
       </View>

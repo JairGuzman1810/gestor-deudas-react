@@ -7,6 +7,9 @@ import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
 import Action from "../views/Action";
 import ChangePassword from "../views/ChangePassword";
+import ChangeUserEmail from "../views/ChangeUserEmail";
+import ChangeUserName from "../views/ChangeUserName";
+import ChangeUserPassword from "../views/ChangeUserPassword";
 import CreateUser from "../views/CreateUser";
 import DetailDebtor from "../views/DetailDebtor";
 import EditDebtor from "../views/EditDebtor";
@@ -108,6 +111,21 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         <Drawer.Screen
           name="Action"
           component={Action}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="ChangeUserEmail"
+          component={ChangeUserEmail}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="ChangeUserName"
+          component={ChangeUserName}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
+        <Drawer.Screen
+          name="ChangeUserPassword"
+          component={ChangeUserPassword}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         />
       </Drawer.Navigator>

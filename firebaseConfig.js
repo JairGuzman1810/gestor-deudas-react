@@ -1,3 +1,11 @@
+import {
+  API_KEY,
+  AUTH_DOMAIN,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  APP_ID,
+} from "@env";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
@@ -12,12 +20,12 @@ import { getDatabase } from "firebase/database";
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBJPA-H80OKQV5ALL3AwUmKnVZkmd_b7JY",
-  authDomain: "gestor-deudas.firebaseapp.com",
-  projectId: "gestor-deudas",
-  storageBucket: "gestor-deudas.appspot.com",
-  messagingSenderId: "768484984339",
-  appId: "1:768484984339:web:9b6c174ea29131399721e6",
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
 };
 
 export const FIREBASE_APP = initializeApp(firebaseConfig);

@@ -11,6 +11,7 @@ import {
 
 const Action = ({ route }) => {
   const { user } = route.params;
+  console.log(user);
 
   const navigation = useNavigation();
 
@@ -36,13 +37,19 @@ const Action = ({ route }) => {
       <View style={styles.gridContainer}>
         <View style={[styles.gridRow, { alignItems: "flex-end" }]}>
           <View style={[styles.button, { marginBottom: 30 }]}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() => navigation.navigate("ChangeUserEmail", { user })}
+            >
               <Ionicons name="mail" size={40} color="white" />
               <Text style={styles.buttonText}>Cambiar{"\n"}Correo</Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.button, { marginBottom: 30 }]}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() => navigation.navigate("ChangeUserName", { user })}
+            >
               <Ionicons name="person" size={40} color="white" />
               <Text style={styles.buttonText}>Cambiar{"\n"}Nombre</Text>
             </TouchableOpacity>
@@ -50,7 +57,12 @@ const Action = ({ route }) => {
         </View>
         <View style={styles.gridRow}>
           <View style={[styles.button, { marginTop: 30 }]}>
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() =>
+                navigation.navigate("ChangeUserPassword", { user })
+              }
+            >
               <Ionicons name="lock-closed" size={40} color="white" />
               <Text style={styles.buttonText}>Cambiar{"\n"}Contraseña</Text>
             </TouchableOpacity>

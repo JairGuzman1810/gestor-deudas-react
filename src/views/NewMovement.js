@@ -12,7 +12,7 @@ import {
   Pressable,
   ToastAndroid,
   Alert,
-  TextInput
+  TextInput,
 } from "react-native";
 
 import { addMovement } from "../utils/MovementsHelper";

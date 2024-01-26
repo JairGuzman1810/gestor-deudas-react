@@ -65,7 +65,7 @@ const CreateUser = ({ user }) => {
       await signInWithEmailAndPassword(
         auth,
         user.correo,
-        decrypt(user.contraseña, "")
+        decrypt(user.contraseña)
       );
 
       // Mostrar mensaje de éxito
@@ -144,9 +144,12 @@ const CreateUser = ({ user }) => {
         </View>
       </View>
       {/* New Password */}
-      <View style={styles.section}>
+      <View style={[styles.section, { marginHorizontal: 8 }]}>
         <Text style={styles.contenttitle}>Contraseña</Text>
         <View style={[styles.separator]} />
+      </View>
+
+      <View style={styles.section}>
         <View style={styles.input}>
           <Ionicons
             style={styles.iconinput}
