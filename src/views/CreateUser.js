@@ -75,6 +75,11 @@ const CreateUser = ({ user }) => {
       setPassword("");
       setRepeatPassword("");
     } catch (error) {
+      await signInWithEmailAndPassword(
+        auth,
+        user.correo,
+        decrypt(user.contraseña)
+      );
       Alert.alert("Error", error.message);
     }
   };

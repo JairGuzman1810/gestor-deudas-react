@@ -70,6 +70,32 @@ export const updatePass = async (password) => {
   }
 };
 
+export const updateUserEmail = async (userSelected, email) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = userSelected.uid;
+      const userRef = ref(FIREBASE_DATABASE, `Usuarios/${userUID}`);
+
+      const userData = {
+        correo: email,
+      };
+
+      await update(userRef, userData);
+
+      // Limpia los campos después de la actualización exitosa
+
+      return true; // Retorna true si la actualización fue exitosa
+    } else {
+      return false; // Retorna false si no hay un usuario conectado
+    }
+  } catch (error) {
+    console.error("Error al actualizar información de usuario:", error);
+    return false; // Retorna false en caso de error durante la actualización
+  }
+};
+
 export const getAllUsers = async () => {
   const user = FIREBASE_AUTH.currentUser;
 

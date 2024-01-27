@@ -12,15 +12,15 @@ import {
 
 const ChangeUserName = ({ route }) => {
   const [name, setName] = useState("");
-  const { user } = route.params;
-  console.log(user);
+  const { userSelected } = route.params;
+  console.log(userSelected);
 
   const navigation = useNavigation();
 
   const goBack = () => {
     setName("");
     navigation.navigate("Action", {
-      user,
+      userSelected,
     });
   };
   return (
@@ -45,7 +45,7 @@ const ChangeUserName = ({ route }) => {
         </View>
         <View style={styles.separator} />
         <View style={styles.namecontainer}>
-          <Text style={styles.name}>{user.nombre}</Text>
+          <Text style={styles.name}>{userSelected.nombre}</Text>
         </View>
       </View>
       {/* Nuevo Nombre */}

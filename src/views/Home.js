@@ -59,8 +59,13 @@ const Home = () => {
       // Si hay una cadena JSON válida, convertirla a un objeto
       if (storedSortingValuesString) {
         storedSortingValues = JSON.parse(storedSortingValuesString);
-
         // Actualizar el estado con los valores recuperados
+      } else {
+        //Si corre por primera vez o no usado los filtros, se usa el de por defecto.
+        storedSortingValues = {
+          selectedOption,
+          sortingOrder,
+        };
       }
     } catch (error) {
       console.error("Error fetching data from AsyncStorage:", error);

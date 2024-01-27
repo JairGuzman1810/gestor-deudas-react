@@ -10,8 +10,7 @@ import {
 } from "react-native";
 
 const Action = ({ route }) => {
-  const { user } = route.params;
-  console.log(user);
+  const { userSelected } = route.params;
 
   const navigation = useNavigation();
 
@@ -39,7 +38,9 @@ const Action = ({ route }) => {
           <View style={[styles.button, { marginBottom: 30 }]}>
             <TouchableOpacity
               style={styles.touchableOpacity}
-              onPress={() => navigation.navigate("ChangeUserEmail", { user })}
+              onPress={() =>
+                navigation.navigate("ChangeUserEmail", { userSelected })
+              }
             >
               <Ionicons name="mail" size={40} color="white" />
               <Text style={styles.buttonText}>Cambiar{"\n"}Correo</Text>
@@ -48,7 +49,9 @@ const Action = ({ route }) => {
           <View style={[styles.button, { marginBottom: 30 }]}>
             <TouchableOpacity
               style={styles.touchableOpacity}
-              onPress={() => navigation.navigate("ChangeUserName", { user })}
+              onPress={() =>
+                navigation.navigate("ChangeUserName", { userSelected })
+              }
             >
               <Ionicons name="person" size={40} color="white" />
               <Text style={styles.buttonText}>Cambiar{"\n"}Nombre</Text>
@@ -60,7 +63,7 @@ const Action = ({ route }) => {
             <TouchableOpacity
               style={styles.touchableOpacity}
               onPress={() =>
-                navigation.navigate("ChangeUserPassword", { user })
+                navigation.navigate("ChangeUserPassword", { userSelected })
               }
             >
               <Ionicons name="lock-closed" size={40} color="white" />

@@ -18,7 +18,7 @@ const ChangeUserPassword = ({ route }) => {
   const [hidePass, setHidePass] = useState(true);
   const [hideOldPass, setHideOldPass] = useState(true);
   const [hideRepeatPass, setHideRepeatPass] = useState(true);
-  const { user } = route.params;
+  const { userSelected } = route.params;
 
   const navigation = useNavigation();
 
@@ -29,7 +29,7 @@ const ChangeUserPassword = ({ route }) => {
     setPassword("");
     setRepeatPassword("");
     navigation.navigate("Action", {
-      user,
+      userSelected,
     });
   };
   return (
@@ -56,8 +56,8 @@ const ChangeUserPassword = ({ route }) => {
         <View style={styles.passwordcontainer}>
           <Text style={styles.password}>
             {hideOldPass
-              ? decrypt(user.contraseña).replace(/./g, "*")
-              : decrypt(user.contraseña)}
+              ? decrypt(userSelected.contraseña).replace(/./g, "*")
+              : decrypt(userSelected.contraseña)}
           </Text>
           <Ionicons
             style={{ marginHorizontal: 10 }}

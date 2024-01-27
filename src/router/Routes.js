@@ -115,9 +115,10 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="ChangeUserEmail"
-          component={ChangeUserEmail}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <ChangeUserEmail {...props} user={user} />}
+        </Drawer.Screen>
         <Drawer.Screen
           name="ChangeUserName"
           component={ChangeUserName}

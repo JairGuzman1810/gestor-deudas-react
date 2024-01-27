@@ -24,7 +24,7 @@ const UserItem = ({ user }) => {
               style={styles.touchableOpacity}
               onPress={() =>
                 navigation.navigate("Action", {
-                  user,
+                  userSelected: user,
                 })
               }
             >

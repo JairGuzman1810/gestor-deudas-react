@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword, updateEmail } from "firebase/auth";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -8,21 +10,85 @@ import {
   View,
   Platform,
   TextInput,
+  ToastAndroid,
+  Alert,
 } from "react-native";
 
-const ChangeUserEmail = ({ route }) => {
+import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { decrypt } from "../utils/AESUtils";
+import { updateUserEmail } from "../utils/UserHelpers";
+
+const ChangeUserEmail = ({ route, user }) => {
+  const auth = FIREBASE_AUTH;
   const [email, setEmail] = useState("");
-  const { user } = route.params;
-  console.log(user);
+  const { userSelected } = route.params;
 
   const navigation = useNavigation();
 
   const goBack = () => {
     setEmail("");
     navigation.navigate("Action", {
-      user,
+      userSelected,
     });
   };
+
+  const showToast = (title, message) => {
+    if (Platform.OS === "android") {
+      ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      );
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
+  const handleChangeEmail = async () => {
+    try {
+      // Iniciar sesión con el usuario
+      await signInWithEmailAndPassword(
+        auth,
+        userSelected.correo,
+        decrypt(userSelected.contraseña)
+      );
+
+      //Actualizar información al auth.
+      await updateEmail(auth.currentUser, email);
+
+      //Actualizar información al db.
+      await updateUserEmail(userSelected, email);
+
+      // Cerrar sesión
+      await auth.signOut();
+
+      // Iniciar sesión con el usuario
+      await signInWithEmailAndPassword(
+        auth,
+        user.correo,
+        decrypt(user.contraseña)
+      );
+
+      // Mostrar mensaje de éxito
+      showToast("Éxito", "Correo actualizado correctamente.");
+
+      //Volver
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "MyUsers" }],
+      });
+    } catch (error) {
+      await signInWithEmailAndPassword(
+        auth,
+        user.correo,
+        decrypt(user.contraseña)
+      );
+      Alert.alert("Error", error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -45,7 +111,7 @@ const ChangeUserEmail = ({ route }) => {
         </View>
         <View style={styles.separator} />
         <View style={styles.emailcontainer}>
-          <Text style={styles.email}>{user.correo}</Text>
+          <Text style={styles.email}>{userSelected.correo}</Text>
         </View>
       </View>
       {/* Nuevo Correo */}
@@ -75,6 +141,7 @@ const ChangeUserEmail = ({ route }) => {
         <TouchableOpacity
           disabled={email === ""}
           style={styles.touchableOpacity}
+          onPress={handleChangeEmail}
         >
           <Text
             style={email === "" ? styles.buttonTextDisable : styles.buttonText}
