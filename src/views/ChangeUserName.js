@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -8,12 +9,15 @@ import {
   View,
   Platform,
   TextInput,
+  ToastAndroid,
+  Alert,
 } from "react-native";
+
+import { updateUserName } from "../utils/UserHelpers";
 
 const ChangeUserName = ({ route }) => {
   const [name, setName] = useState("");
   const { userSelected } = route.params;
-  console.log(userSelected);
 
   const navigation = useNavigation();
 
@@ -22,6 +26,38 @@ const ChangeUserName = ({ route }) => {
     navigation.navigate("Action", {
       userSelected,
     });
+  };
+
+  const showToast = (title, message) => {
+    if (Platform.OS === "android") {
+      ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.SHORT,
+        ToastAndroid.BOTTOM,
+        25,
+        50
+      );
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
+  const handleChangeName = async () => {
+    try {
+      //Actualizar información al db.
+      await updateUserName(userSelected, name);
+
+      // Mostrar mensaje de éxito
+      showToast("Éxito", "Correo actualizado correctamente.");
+
+      //Volver
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "MyUsers" }],
+      });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    }
   };
   return (
     <View style={styles.container}>
@@ -72,6 +108,7 @@ const ChangeUserName = ({ route }) => {
       {/* Change Name button */}
       <View style={name === "" ? styles.buttonDisable : styles.button}>
         <TouchableOpacity
+          onPress={handleChangeName}
           disabled={name === ""}
           style={styles.touchableOpacity}
         >
