@@ -126,9 +126,10 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="ChangeUserPassword"
-          component={ChangeUserPassword}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
+        >
+          {(props) => <ChangeUserPassword {...props} user={user} />}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );

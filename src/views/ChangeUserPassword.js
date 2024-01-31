@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -8,11 +10,15 @@ import {
   View,
   Platform,
   TextInput,
+  ToastAndroid,
+  Alert,
 } from "react-native";
 
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { decrypt } from "../utils/AESUtils";
+import { updateUserPassword } from "../utils/UserHelpers";
 
-const ChangeUserPassword = ({ route }) => {
+const ChangeUserPassword = ({ route, user }) => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [hidePass, setHidePass] = useState(true);
@@ -32,6 +38,74 @@ const ChangeUserPassword = ({ route }) => {
       userSelected,
     });
   };
+
+  const handleChangeUserPassword = async () => {
+    try {
+      // Check if new and repeated passwords match
+      if (password !== repeatPassword) {
+        if (Platform.OS === "android") {
+          ToastAndroid.show(
+            "Las contraseñas no coinciden.",
+            ToastAndroid.SHORT
+          );
+        } else if (Platform.OS === "ios") {
+          Alert.alert("Error", "Las contraseñas no coinciden.");
+        }
+        return;
+      }
+
+      // Reauthenticate the user with their current password
+
+      // Iniciar sesión con el usuario
+      await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        userSelected.correo,
+        decrypt(userSelected.contraseña)
+      );
+
+      // Change the password.
+      await updatePassword(FIREBASE_AUTH.currentUser, password);
+
+      //Change db in the password.
+      await updateUserPassword(userSelected, password);
+
+      // Cerrar sesión
+      await FIREBASE_AUTH.signOut();
+
+      // Iniciar sesión con el usuario
+      await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        user.correo,
+        decrypt(user.contraseña)
+      );
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "MyUsers" }],
+      });
+
+      // Password changed successfully
+      if (Platform.OS === "android") {
+        ToastAndroid.show(
+          "Contraseña cambiada exitosamente.",
+          ToastAndroid.SHORT
+        );
+      } else if (Platform.OS === "ios") {
+        Alert.alert("Éxito", "Contraseña actualizada exitosamente.");
+      }
+
+      // Navigate or perform other actions after successful password change
+    } catch (error) {
+      // Handle any authentication or password change errors
+      Alert.alert("Error", error.message);
+      await signInWithEmailAndPassword(
+        FIREBASE_AUTH,
+        user.correo,
+        decrypt(user.contraseña)
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -130,6 +204,7 @@ const ChangeUserPassword = ({ route }) => {
         <TouchableOpacity
           disabled={password === "" || repeatPassword === ""}
           style={styles.touchableOpacity}
+          onPress={handleChangeUserPassword}
         >
           <Text
             style={
