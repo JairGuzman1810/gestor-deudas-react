@@ -73,9 +73,6 @@ const Home = () => {
       return;
     }
 
-    setIsLoading(true);
-    setIsRefreshing(true);
-
     try {
       const debtors = await getAllDebtors();
 
@@ -370,7 +367,7 @@ const Home = () => {
           ) : filteredDebtors.length === 0 ? (
             <View style={styles.noDebtorsContainer}>
               <Text style={styles.noDebtorsText}>
-                Sin registros con el nombre:
+                Sin registros con la busqueda:
               </Text>
               <Text style={styles.noDebtorsText}>"{search}"</Text>
             </View>

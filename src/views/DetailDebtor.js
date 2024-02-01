@@ -28,7 +28,7 @@ const DetailDebtor = ({ route }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [sortingValues, setSortingValues] = useState({
     selectedOption: "Fecha del movimiento",
-    sortingOrder: "Asc",
+    sortingOrder: "Desc",
   });
   const [search, setSearch] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
@@ -60,8 +60,8 @@ const DetailDebtor = ({ route }) => {
         case "Fecha del movimiento":
           sortedMovements.sort((a, b) =>
             sortingValues.sortingOrder === "Asc"
-              ? a.ultimomovimiento - b.ultimomovimiento
-              : b.ultimomovimiento - a.ultimomovimiento
+              ? a.fecha - b.fecha
+              : b.fecha - a.fecha
           );
           break;
         case "Fecha de creación":
@@ -74,8 +74,8 @@ const DetailDebtor = ({ route }) => {
         case "Deuda":
           sortedMovements.sort((a, b) =>
             sortingValues.sortingOrder === "Asc"
-              ? a.deudaindividual - b.deudaindividual
-              : b.deudaindividual - a.deudaindividual
+              ? a.importe - b.importe
+              : b.importe - a.importe
           );
           break;
         default:
@@ -402,7 +402,7 @@ const DetailDebtor = ({ route }) => {
           ) : filteredMovements.length === 0 ? (
             <View style={styles.noMovementsContainer}>
               <Text style={styles.noMovementsText}>
-                Sin registros con el nombre:
+                Sin registros con la busqueda:
               </Text>
               <Text style={styles.noMovementsText}>"{search}"</Text>
             </View>
