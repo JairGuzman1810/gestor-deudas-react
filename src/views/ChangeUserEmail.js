@@ -18,10 +18,11 @@ import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { decrypt } from "../utils/AESUtils";
 import { updateUserEmail } from "../utils/UserHelpers";
 
-const ChangeUserEmail = ({ route, user }) => {
+const ChangeUserEmail = ({ route }) => {
   const auth = FIREBASE_AUTH;
   const [email, setEmail] = useState("");
-  const { userSelected } = route.params;
+  const { userSelected, user } = route.params;
+  console.log(user);
 
   const navigation = useNavigation();
 

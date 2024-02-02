@@ -1,4 +1,4 @@
-import { get, ref, set, update } from "firebase/database";
+import { get, ref, remove, set, update } from "firebase/database";
 
 import { encrypt } from "./AESUtils";
 import { FIREBASE_AUTH, FIREBASE_DATABASE } from "../../firebaseConfig";
@@ -145,6 +145,37 @@ export const updateUserPassword = async (userSelected, password) => {
   } catch (error) {
     console.error("Error al actualizar información de usuario:", error);
     return false; // Retorna false en caso de error durante la actualización
+  }
+};
+
+export const deleteUserData = async (userSelected) => {
+  try {
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (user) {
+      const userUID = userSelected.uid;
+      const userRef = ref(FIREBASE_DATABASE, `Usuarios/${userUID}`);
+
+      // Borrar el usuario.
+      await remove(userRef);
+
+      // Borrar todos los deudores del usuario
+      const userDebtorsRef = ref(FIREBASE_DATABASE, `Deudores/${userUID}`);
+
+      await remove(userDebtorsRef);
+
+      // Borrar todos los movimientos del usuario.
+      const userMovementsRef = ref(FIREBASE_DATABASE, `Movimientos/${userUID}`);
+
+      await remove(userMovementsRef);
+
+      return true; // Retorna true si la eliminación fue exitosa
+    } else {
+      return false; // Retorna false si no hay un usuario conectado
+    }
+  } catch (error) {
+    console.error("Error al eliminar información de deudor:", error);
+    return false; // Retorna false en caso de error durante la eliminación
   }
 };
 

@@ -110,15 +110,15 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="Action"
-          component={Action}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="ChangeUserEmail"
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
         >
-          {(props) => <ChangeUserEmail {...props} user={user} />}
+          {(props) => <Action {...props} user={user} />}
         </Drawer.Screen>
+        <Drawer.Screen
+          name="ChangeUserEmail"
+          component={ChangeUserEmail}
+          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+        />
         <Drawer.Screen
           name="ChangeUserName"
           component={ChangeUserName}
@@ -126,10 +126,9 @@ const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
         />
         <Drawer.Screen
           name="ChangeUserPassword"
+          component={ChangeUserPassword}
           options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        >
-          {(props) => <ChangeUserPassword {...props} user={user} />}
-        </Drawer.Screen>
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );

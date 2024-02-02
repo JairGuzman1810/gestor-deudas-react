@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,11 @@ import {
   StyleSheet,
 } from "react-native";
 
-const Action = ({ route }) => {
+import UserModal from "../components/UserModal";
+
+const Action = ({ route, user }) => {
   const { userSelected } = route.params;
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -19,6 +22,10 @@ const Action = ({ route }) => {
       index: 0,
       routes: [{ name: "MyUsers" }],
     });
+  };
+
+  const hideModal = () => {
+    setIsModalVisible(false);
   };
   return (
     <View style={styles.container}>
@@ -39,7 +46,7 @@ const Action = ({ route }) => {
             <TouchableOpacity
               style={styles.touchableOpacity}
               onPress={() =>
-                navigation.navigate("ChangeUserEmail", { userSelected })
+                navigation.navigate("ChangeUserEmail", { userSelected, user })
               }
             >
               <Ionicons name="mail" size={40} color="white" />
@@ -63,7 +70,10 @@ const Action = ({ route }) => {
             <TouchableOpacity
               style={styles.touchableOpacity}
               onPress={() =>
-                navigation.navigate("ChangeUserPassword", { userSelected })
+                navigation.navigate("ChangeUserPassword", {
+                  userSelected,
+                  user,
+                })
               }
             >
               <Ionicons name="lock-closed" size={40} color="white" />
@@ -76,13 +86,22 @@ const Action = ({ route }) => {
               { backgroundColor: "#B11D1D", marginTop: 30 },
             ]}
           >
-            <TouchableOpacity style={styles.touchableOpacity}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              onPress={() => setIsModalVisible(true)}
+            >
               <Ionicons name="trash" size={40} color="white" />
               <Text style={styles.buttonText}>Eliminar{"\n"}cuenta</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
+      <UserModal
+        userSelected={userSelected}
+        isModalVisible={isModalVisible}
+        hideModal={hideModal}
+        user={user}
+      />
     </View>
   );
 };

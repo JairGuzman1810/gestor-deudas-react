@@ -18,13 +18,13 @@ import { FIREBASE_AUTH } from "../../firebaseConfig";
 import { decrypt } from "../utils/AESUtils";
 import { updateUserPassword } from "../utils/UserHelpers";
 
-const ChangeUserPassword = ({ route, user }) => {
+const ChangeUserPassword = ({ route }) => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [hidePass, setHidePass] = useState(true);
   const [hideOldPass, setHideOldPass] = useState(true);
   const [hideRepeatPass, setHideRepeatPass] = useState(true);
-  const { userSelected } = route.params;
+  const { userSelected, user } = route.params;
 
   const navigation = useNavigation();
 
