@@ -225,7 +225,6 @@ export default ChangeUserPassword;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === "android" ? 30 : 0, // Apply marginTop only on Android
     flex: 1,
     backgroundColor: "#F0F0F0",
   },

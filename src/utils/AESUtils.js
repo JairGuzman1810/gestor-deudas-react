@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { SECRET_KEY } from "@env";
 import CryptoJS from "crypto-js";
 
 const setKey = (myKey) => {
@@ -15,7 +14,7 @@ const setKey = (myKey) => {
 
 const encrypt = (strToEncrypt) => {
   try {
-    const secretKey = setKey(SECRET_KEY);
+    const secretKey = setKey("");
     if (secretKey) {
       const encrypted = CryptoJS.AES.encrypt(strToEncrypt, secretKey, {
         mode: CryptoJS.mode.ECB,
@@ -31,7 +30,7 @@ const encrypt = (strToEncrypt) => {
 
 const decrypt = (strToDecrypt) => {
   try {
-    const secretKey = setKey(SECRET_KEY);
+    const secretKey = setKey("");
     if (secretKey) {
       const decrypted = CryptoJS.AES.decrypt(strToDecrypt, secretKey, {
         mode: CryptoJS.mode.ECB,

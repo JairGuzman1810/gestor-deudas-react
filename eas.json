@@ -1,0 +1,58 @@
+{
+  "cli": {
+    "version": ">= 5.9.3"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyBJPA-H80OKQV5ALL3AwUmKnVZkmd_b7JY",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "gestor-deudas.firebaseapp.com",
+        "EXPO_PUBLIC_PROJECT_ID": "gestor-deudas",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "gestor-deudas.appspot.com",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "768484984339",
+        "EXPO_PUBLIC_APP_ID": "1:768484984339:web:9b6c174ea29131399721e6"
+      }
+    },
+    "preview": {
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyBJPA-H80OKQV5ALL3AwUmKnVZkmd_b7JY",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "gestor-deudas.firebaseapp.com",
+        "EXPO_PUBLIC_PROJECT_ID": "gestor-deudas",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "gestor-deudas.appspot.com",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "768484984339",
+        "EXPO_PUBLIC_APP_ID": "1:768484984339:web:9b6c174ea29131399721e6"
+      },
+      "ios": {
+        "simulator": true
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyBJPA-H80OKQV5ALL3AwUmKnVZkmd_b7JY",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "gestor-deudas.firebaseapp.com",
+        "EXPO_PUBLIC_PROJECT_ID": "gestor-deudas",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "gestor-deudas.appspot.com",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "768484984339",
+        "EXPO_PUBLIC_APP_ID": "1:768484984339:web:9b6c174ea29131399721e6"
+      }
+    },
+    "test": {
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyBJPA-H80OKQV5ALL3AwUmKnVZkmd_b7JY",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "gestor-deudas.firebaseapp.com",
+        "EXPO_PUBLIC_PROJECT_ID": "gestor-deudas",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "gestor-deudas.appspot.com",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "768484984339",
+        "EXPO_PUBLIC_APP_ID": "1:768484984339:web:9b6c174ea29131399721e6"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
