@@ -11,11 +11,15 @@ import {
   TextInput,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import { updateUserName } from "../utils/UserHelpers";
 
 const ChangeUserName = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const [name, setName] = useState("");
   const { userSelected } = route.params;
 
@@ -60,7 +64,9 @@ const ChangeUserName = ({ route }) => {
     }
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -74,34 +80,49 @@ const ChangeUserName = ({ route }) => {
       {/* Antiguo Nombre */}
       <View style={styles.contentcontainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons name="person" size={18} color="black" />
-          <Text style={[styles.contenttitle, { marginLeft: 2 }]}>
+          <Ionicons name="person" size={18} color={themeColors.icon} />
+          <Text
+            style={[
+              styles.contenttitle,
+              { marginLeft: 2, color: themeColors.text },
+            ]}
+          >
             Antiguo nombre
           </Text>
         </View>
         <View style={styles.separator} />
         <View style={styles.namecontainer}>
-          <Text style={styles.name}>{userSelected.nombre}</Text>
+          <Text style={[styles.name, { color: themeColors.text }]}>
+            {userSelected.nombre}
+          </Text>
         </View>
       </View>
       {/* Nuevo Nombre */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Nuevo nombre</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Nuevo nombre
+        </Text>
         <View style={styles.separator} />
       </View>
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="person"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Nombre"
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
@@ -128,7 +149,6 @@ export default ChangeUserName;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -175,7 +195,6 @@ const styles = StyleSheet.create({
   contenttitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 17,
-    color: "#000",
   },
   separator: {
     height: 1,
@@ -191,7 +210,6 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: "Montserrat-Regular",
     fontSize: 20,
-    color: "#000",
   },
   section: {
     marginHorizontal: 15,

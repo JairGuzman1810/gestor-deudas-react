@@ -12,14 +12,18 @@ import {
   ActivityIndicator,
   FlatList,
   TextInput,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import DebtorItem from "../components/DebtorItem";
 import SortDebtorModal from "../components/SortDebtorModal";
 import { getAllDebtors } from "../utils/DebtorHelper";
 import { printDebtors } from "../utils/PrintUtils";
 
 const Home = () => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const [debtors, setDebtors] = useState({});
   const [isSearching, setIsSearching] = useState(false);
   const [totalDebt, setTotalDebt] = useState(0);
@@ -228,7 +232,9 @@ const Home = () => {
 
   const navigation = useNavigation();
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
@@ -338,13 +344,19 @@ const Home = () => {
       </View>
       {/* BARRA DE BUSQUEDA */}
       {isSearching && (
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <TextInput
             value={search}
             onChangeText={handleSearchChange}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Buscar"
             autoFocus={searchFocused}
+            placeholderTextColor="#808080"
           />
         </View>
       )}
@@ -355,21 +367,27 @@ const Home = () => {
         <>
           {Object.values(debtors).length === 0 && !isSearching ? (
             <View style={styles.noDebtorsContainer}>
-              <Text style={styles.noDebtorsText}>
+              <Text style={[styles.noDebtorsText, { color: themeColors.text }]}>
                 Sin deudores. Haga su primer deudor con el icono
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("NewDebtor")}
               >
-                <Ionicons name="person-add" size={28} color="black" />
+                <Ionicons
+                  name="person-add"
+                  size={28}
+                  color={themeColors.icon}
+                />
               </TouchableOpacity>
             </View>
           ) : filteredDebtors.length === 0 ? (
             <View style={styles.noDebtorsContainer}>
-              <Text style={styles.noDebtorsText}>
+              <Text style={[styles.noDebtorsText, { color: themeColors.text }]}>
                 Sin registros con la busqueda:
               </Text>
-              <Text style={styles.noDebtorsText}>"{search}"</Text>
+              <Text style={[styles.noDebtorsText, { color: themeColors.text }]}>
+                "{search}"
+              </Text>
             </View>
           ) : (
             <FlatList
@@ -383,9 +401,16 @@ const Home = () => {
         </>
       )}
       {/* FOOTER */}
-      <View style={styles.totaldebtcontainer}>
+      <View
+        style={[
+          styles.totaldebtcontainer,
+          { backgroundColor: themeColors.backgroundThree },
+        ]}
+      >
         <View style={styles.leftTextContainer}>
-          <Text style={styles.leftText}>Deuda total:</Text>
+          <Text style={[styles.leftText, { color: themeColors.text }]}>
+            Deuda total:
+          </Text>
         </View>
         <View style={styles.rightTextContainer}>
           <Text
@@ -427,7 +452,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -472,7 +496,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "#000",
     marginTop: 1,
-    backgroundColor: "#fdfdfd",
     borderTopRightRadius: 25,
     flexDirection: "row",
     borderTopLeftRadius: 25,
@@ -519,7 +542,6 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   input: {
-    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
     marginHorizontal: 4,

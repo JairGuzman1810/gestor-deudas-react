@@ -8,7 +8,10 @@ import {
   StyleSheet,
   Modal,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
+
+import { lightColors, darkColors } from "../colors";
 
 const SortDebtorModal = ({
   isModalVisible,
@@ -17,9 +20,10 @@ const SortDebtorModal = ({
   setSortingOrder,
   selectedOption,
   setSelectedOption,
-  sortingValues,
   setSortingValues,
 }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const handlePressOutside = () => {
     // Close the modal when clicking outside
     hideModal();
@@ -68,8 +72,15 @@ const SortDebtorModal = ({
     >
       <TouchableWithoutFeedback onPress={handlePressOutside}>
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.title}>Ordenar ({sortingOrder}):</Text>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: themeColors.backgroundThree },
+            ]}
+          >
+            <Text style={[styles.title, { color: themeColors.text }]}>
+              Ordenar ({sortingOrder}):
+            </Text>
 
             {/* Options */}
             {[
@@ -92,6 +103,7 @@ const SortDebtorModal = ({
                           option === selectedOption
                             ? "Montserrat-Bold"
                             : "Montserrat-Regular",
+                        color: themeColors.text,
                       },
                     ]}
                   >
@@ -114,7 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.1)",
   },
   modalContent: {
-    backgroundColor: "white",
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 20,

@@ -14,14 +14,18 @@ import {
   View,
   FlatList,
   TextInput,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import MovementItem from "../components/MovementItem";
 import SortMovementModal from "../components/SortMovementModal";
 import { fetchMovements } from "../utils/MovementsHelper";
 import { printMovements } from "../utils/PrintUtils";
 
 const DetailDebtor = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
   const [movements, setMovements] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -170,7 +174,9 @@ const DetailDebtor = ({ route }) => {
   });
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
@@ -228,9 +234,11 @@ const DetailDebtor = ({ route }) => {
       <View style={styles.namecontainer}>
         <View style={styles.leftnamecontainer}>
           <TouchableOpacity>
-            <Ionicons name="person" size={18} color="black" />
+            <Ionicons name="person" size={18} color={themeColors.icon} />
           </TouchableOpacity>
-          <Text style={styles.name}>{debtor.nombre}</Text>
+          <Text style={[styles.name, { color: themeColors.text }]}>
+            {debtor.nombre}
+          </Text>
         </View>
         <View style={styles.rightnamecontainer}>
           <TouchableOpacity>
@@ -238,20 +246,24 @@ const DetailDebtor = ({ route }) => {
               onPress={doCall}
               name={debtor.telefono ? "call" : "call-outline"}
               size={30}
-              color="black"
+              color={themeColors.icon}
             />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Notas</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Notas
+        </Text>
         <View style={styles.separator} />
-        <Text style={styles.notes}>
+        <Text style={[styles.notes, { color: themeColors.text }]}>
           {debtor.notas ? debtor.notas : "No hay notas en este deudor."}
         </Text>
       </View>
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Deuda Total</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Deuda Total
+        </Text>
         <View style={styles.separator} />
         <View style={styles.amountcontainer}>
           <View style={styles.leftamountcontainer}>
@@ -293,7 +305,7 @@ const DetailDebtor = ({ route }) => {
       </View>
       <View style={styles.contentcontainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={styles.contenttitle}>
+          <Text style={[styles.contenttitle, { color: themeColors.text }]}>
             {isLoading
               ? "Movimientos (...)"
               : `Movimientos (${Object.values(movements).length})`}
@@ -331,7 +343,7 @@ const DetailDebtor = ({ route }) => {
                     : "search-circle"
                 }
                 size={30}
-                color="black"
+                color={themeColors.icon}
               />
             </TouchableOpacity>
 
@@ -351,7 +363,7 @@ const DetailDebtor = ({ route }) => {
                     : "funnel"
                 }
                 size={30}
-                color="black"
+                color={themeColors.icon}
               />
             </TouchableOpacity>
           </View>
@@ -361,13 +373,19 @@ const DetailDebtor = ({ route }) => {
       </View>
       {/* BARRA DE BUSQUEDA */}
       {isSearching && (
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <TextInput
             value={search}
             onChangeText={(text) => setSearch(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Buscar"
             autoFocus={searchFocused}
+            placeholderTextColor="#808080"
           />
         </View>
       )}
@@ -377,7 +395,9 @@ const DetailDebtor = ({ route }) => {
         <>
           {Object.values(movements).length === 0 && !isSearching ? (
             <View style={styles.noMovementsContainer}>
-              <Text style={styles.noMovementsText}>
+              <Text
+                style={[styles.noMovementsText, { color: themeColors.text }]}
+              >
                 Sin movimientos. Haga su primer movimiento con los botones
               </Text>
               <View style={styles.noMovementsButtons}>
@@ -401,10 +421,16 @@ const DetailDebtor = ({ route }) => {
             </View>
           ) : filteredMovements.length === 0 ? (
             <View style={styles.noMovementsContainer}>
-              <Text style={styles.noMovementsText}>
+              <Text
+                style={[styles.noMovementsText, { color: themeColors.text }]}
+              >
                 Sin registros con la busqueda:
               </Text>
-              <Text style={styles.noMovementsText}>"{search}"</Text>
+              <Text
+                style={[styles.noMovementsText, { color: themeColors.text }]}
+              >
+                "{search}"
+              </Text>
             </View>
           ) : (
             <FlatList
@@ -434,7 +460,6 @@ export default DetailDebtor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -497,7 +522,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: "Montserrat-Bold",
     fontSize: 20,
-    color: "#000",
   },
   separator: {
     height: 1,
@@ -512,13 +536,11 @@ const styles = StyleSheet.create({
   contenttitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 17,
-    color: "#000",
   },
   notes: {
     textAlign: "justify",
     fontFamily: "Montserrat-Regular",
     fontSize: 17,
-    color: "#000",
   },
   amount: {
     fontFamily: "Montserrat-Regular",

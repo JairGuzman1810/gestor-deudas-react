@@ -8,7 +8,10 @@ import {
   StyleSheet,
   Modal,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from "react-native";
+
+import { lightColors, darkColors } from "../colors";
 
 const SortMovementModal = ({
   isModalVisible,
@@ -16,6 +19,8 @@ const SortMovementModal = ({
   sortingValues,
   setSortingValues,
 }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const handlePressOutside = () => {
     // Close the modal when clicking outside
     hideModal();
@@ -54,8 +59,13 @@ const SortMovementModal = ({
     >
       <TouchableWithoutFeedback onPress={handlePressOutside}>
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.title}>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: themeColors.backgroundThree },
+            ]}
+          >
+            <Text style={[styles.title, { color: themeColors.text }]}>
               Ordenar ({sortingValues.sortingOrder}):
             </Text>
 
@@ -76,6 +86,7 @@ const SortMovementModal = ({
                             option === sortingValues.selectedOption
                               ? "Montserrat-Bold"
                               : "Montserrat-Regular",
+                          color: themeColors.text,
                         },
                       ]}
                     >
@@ -99,7 +110,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.1)",
   },
   modalContent: {
-    backgroundColor: "white",
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 20,
@@ -107,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Montserrat-Bold",
     textAlign: "center",
-    color: "black",
+    color: "#000",
     fontSize: 20,
     marginBottom: 15,
   },

@@ -6,11 +6,15 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 
 import DebtorModal from "./DebtorModal";
+import { lightColors, darkColors } from "../colors";
 
 const DebtorItem = ({ debtor }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
   const [isHeld, setIsHeld] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -36,7 +40,9 @@ const DebtorItem = ({ debtor }) => {
       style={[
         styles.container,
         {
-          backgroundColor: isHeld ? "#82E7EB" : "#ffff",
+          backgroundColor: isHeld
+            ? themeColors.backgroundSelected
+            : themeColors.backgroundThree,
         },
       ]}
     >
@@ -61,7 +67,9 @@ const DebtorItem = ({ debtor }) => {
         delayLongPress={500} // Adjust the delay as needed
       >
         <View style={styles.leftcontainer}>
-          <Text style={styles.name}>{debtor.nombre}</Text>
+          <Text style={[styles.name, { color: themeColors.text }]}>
+            {debtor.nombre}
+          </Text>
         </View>
         <View style={styles.rightcontainer}>
           <View style={styles.rightcontent}>
@@ -107,7 +115,6 @@ export default DebtorItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     marginHorizontal: 4,
     marginBottom: 5,
     borderRadius: 2,

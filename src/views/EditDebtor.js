@@ -11,8 +11,10 @@ import {
   Platform,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import { updateDebtor } from "../utils/DebtorHelper";
 
 const formatPhoneNumber = (phoneNumber) => {
@@ -42,6 +44,8 @@ const formatPhoneNumber = (phoneNumber) => {
 };
 
 const EditDebtor = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
   const { debtor, isHome } = route.params;
   const [name, setName] = useState(debtor.nombre);
@@ -144,7 +148,9 @@ const EditDebtor = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -157,40 +163,54 @@ const EditDebtor = ({ route }) => {
       </View>
       {/* Nombre */}
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="person"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Nombre"
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
       {/* Telefono */}
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="call"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={phoneNumber}
             inputMode="tel"
             onChangeText={(text) => setPhoneNumber(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Teléfono"
+            placeholderTextColor="#808080"
           />
         </View>
-        <Text style={[styles.formattedTitle]}>Previsualización:</Text>
-        <Text style={[styles.formattedPhone]}>
+        <Text style={[styles.formattedTitle, { color: themeColors.text }]}>
+          Previsualización:
+        </Text>
+        <Text style={[styles.formattedPhone, { color: themeColors.text }]}>
           {phoneNumber
             ? formatPhoneNumber(phoneNumber)
             : "No hay número registrado."}
@@ -198,19 +218,25 @@ const EditDebtor = ({ route }) => {
       </View>
       {/* Notas */}
       <View style={[styles.section]}>
-        <View style={[styles.input, { height: "50%" }]}>
+        <View
+          style={[
+            styles.input,
+            { height: "50%", backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="book"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={notes}
             onChangeText={(text) => setNotes(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Notas"
             multiline
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
@@ -241,7 +267,6 @@ const EditDebtor = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   textinput: {
     flex: 1,

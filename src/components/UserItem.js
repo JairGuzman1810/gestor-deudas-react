@@ -6,16 +6,28 @@ import {
   TouchableOpacity,
   View,
   Platform,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
+
 const UserItem = ({ user }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: themeColors.backgroundThree },
+      ]}
+    >
       <View style={styles.content}>
         <View style={styles.leftcontainer}>
-          <Text style={styles.email}>{user.correo}</Text>
+          <Text style={[styles.email, { color: themeColors.text }]}>
+            {user.correo}
+          </Text>
           <Text style={styles.name}>{user.nombre}</Text>
         </View>
         <View style={styles.rightcontainer}>
@@ -41,7 +53,6 @@ export default UserItem;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     marginHorizontal: 4,
     marginBottom: 5,
     borderRadius: 2,

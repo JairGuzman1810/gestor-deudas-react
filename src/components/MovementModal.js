@@ -11,10 +11,14 @@ import {
   Platform,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import { deleteMovement } from "../utils/MovementsHelper";
 const MovementModal = ({ movement, debtor, isModalVisible, hideModal }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
 
   const handleDeleteMovement = async () => {
@@ -81,11 +85,18 @@ const MovementModal = ({ movement, debtor, isModalVisible, hideModal }) => {
       statusBarTranslucent
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        <View
+          style={[
+            styles.modalContent,
+            { backgroundColor: themeColors.backgroundThree },
+          ]}
+        >
           <Ionicons name="warning" size={50} color="red" />
 
-          <Text style={styles.title}>Eliminar movimiento</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: themeColors.text }]}>
+            Eliminar movimiento
+          </Text>
+          <Text style={[styles.subtitle, { color: themeColors.text }]}>
             ¿Está seguro de que desea eliminar este archivo de forma permanente?
           </Text>
 
@@ -123,21 +134,20 @@ const styles = StyleSheet.create({
   modalContent: {
     width: "90%",
     alignItems: "center",
-    backgroundColor: "white",
     borderRadius: 15,
     padding: 20,
   },
   title: {
     fontFamily: "Montserrat-Bold",
     textAlign: "center",
-    color: "black",
+    color: "#000",
     fontSize: 22,
     marginTop: 10,
   },
   subtitle: {
     fontFamily: "Montserrat-Regular",
     textAlign: "center",
-    color: "black",
+    color: "#000",
     fontSize: 16,
     marginTop: 10,
   },

@@ -15,13 +15,17 @@ import {
   ToastAndroid,
   TouchableOpacity,
   View,
+  useColorScheme,
 } from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { lightColors, darkColors } from "../colors";
 import { decrypt } from "../utils/AESUtils";
 import { addUser } from "../utils/UserHelpers";
 
 const CreateUser = ({ user }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const auth = FIREBASE_AUTH;
   const navigation = useNavigation();
   const [name, setName] = useState("");
@@ -91,7 +95,9 @@ const CreateUser = ({ user }) => {
     });
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -105,100 +111,130 @@ const CreateUser = ({ user }) => {
 
       {/* Nombre */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Nombre</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Nombre
+        </Text>
         <View style={styles.separator} />
       </View>
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="person"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Nombre"
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
 
       {/* Correo */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Correo</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Correo
+        </Text>
         <View style={styles.separator} />
       </View>
 
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="mail"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={email}
             inputMode="email"
             onChangeText={(text) => setEmail(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Correo"
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
-      {/* New Password */}
+      {/* Password */}
       <View style={[styles.section, { marginHorizontal: 8 }]}>
-        <Text style={styles.contenttitle}>Contraseña</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Contraseña
+        </Text>
         <View style={[styles.separator]} />
       </View>
 
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="lock-closed"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={!!hidePass}
-            placeholder="Nueva Contraseña"
+            placeholder="Contraseña"
+            placeholderTextColor="#808080"
           />
           <Ionicons
             size={20}
             name={hidePass ? "eye" : "eye-off-sharp"}
             onPress={() => setHidePass(!hidePass)}
-            color="black"
+            color={themeColors.icon}
           />
         </View>
       </View>
 
       {/* Repeat Password */}
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="lock-closed"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             value={repeatPassword}
             onChangeText={(text) => setRepeatPassword(text)}
             secureTextEntry={!!hideRepeatPass}
             placeholder="Repetir Contraseña"
+            placeholderTextColor="#808080"
           />
           <Ionicons
             size={20}
             name={hideRepeatPass ? "eye" : "eye-off-sharp"}
             onPress={() => setHideRepeatPass(!hideRepeatPass)}
-            color="black"
+            color={themeColors.icon}
           />
         </View>
       </View>
@@ -247,7 +283,6 @@ export default CreateUser;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -294,7 +329,6 @@ const styles = StyleSheet.create({
   contenttitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 17,
-    color: "#000",
   },
   separator: {
     height: 1,
@@ -307,7 +341,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 15,
     marginHorizontal: 10,

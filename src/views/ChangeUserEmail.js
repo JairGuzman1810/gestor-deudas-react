@@ -12,13 +12,17 @@ import {
   TextInput,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { lightColors, darkColors } from "../colors";
 import { decrypt } from "../utils/AESUtils";
 import { updateUserEmail } from "../utils/UserHelpers";
 
 const ChangeUserEmail = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const auth = FIREBASE_AUTH;
   const [email, setEmail] = useState("");
   const { userSelected, user } = route.params;
@@ -91,7 +95,9 @@ const ChangeUserEmail = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -105,35 +111,50 @@ const ChangeUserEmail = ({ route }) => {
       {/* Antiguo Correo */}
       <View style={styles.contentcontainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Ionicons name="mail" size={18} color="black" />
-          <Text style={[styles.contenttitle, { marginLeft: 2 }]}>
+          <Ionicons name="mail" size={18} color={themeColors.icon} />
+          <Text
+            style={[
+              styles.contenttitle,
+              { marginLeft: 2, color: themeColors.text },
+            ]}
+          >
             Antiguo correo
           </Text>
         </View>
         <View style={styles.separator} />
         <View style={styles.emailcontainer}>
-          <Text style={styles.email}>{userSelected.correo}</Text>
+          <Text style={[styles.email, { color: themeColors.text }]}>
+            {userSelected.correo}
+          </Text>
         </View>
       </View>
       {/* Nuevo Correo */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Nuevo Correo</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Nuevo Correo
+        </Text>
         <View style={styles.separator} />
       </View>
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="mail"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={email}
             inputMode="email"
             onChangeText={(text) => setEmail(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Correo"
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
@@ -160,7 +181,6 @@ export default ChangeUserEmail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -207,7 +227,6 @@ const styles = StyleSheet.create({
   contenttitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 17,
-    color: "#000",
   },
   separator: {
     height: 1,
@@ -223,7 +242,6 @@ const styles = StyleSheet.create({
   email: {
     fontFamily: "Montserrat-Regular",
     fontSize: 20,
-    color: "#000",
   },
   section: {
     marginHorizontal: 15,

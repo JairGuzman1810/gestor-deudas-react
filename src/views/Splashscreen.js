@@ -2,7 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text } from "react-native";
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  useColorScheme,
+} from "react-native";
 import Animated, {
   withTiming,
   useSharedValue,
@@ -10,7 +16,13 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 
+import { lightColors, darkColors } from "../colors";
+
 const Splashscreen = ({ userLoggedIn }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
+  console.log(colorScheme);
+
   const navigation = useNavigation();
 
   const opacity = useSharedValue(0);
@@ -49,15 +61,21 @@ const Splashscreen = ({ userLoggedIn }) => {
   }
 
   return (
-    <Animated.View style={[styles.container, animatedContainerStyle]}>
+    <Animated.View
+      style={[
+        styles.container,
+        animatedContainerStyle,
+        { backgroundColor: themeColors.backgroundFirst },
+      ]}
+    >
       <Image source={require("../images/logotwins.png")} style={styles.image} />
-      <Text style={[styles.welcome, { fontFamily: "Monserrat-Regular" }]}>
+      <Text style={[styles.welcome, { color: themeColors.textSplash }]}>
         Bienvenido
       </Text>
       <ActivityIndicator
         style={styles.indicator}
         size="large"
-        color="#DDD9D9"
+        color={themeColors.accent}
       />
     </Animated.View>
   );
@@ -66,7 +84,6 @@ const Splashscreen = ({ userLoggedIn }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
   },
   image: {
@@ -77,7 +94,7 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 25,
     marginTop: 80,
-    color: "#878585",
+    fontFamily: "Monserrat-Regular",
   },
   indicator: {
     marginTop: 20,

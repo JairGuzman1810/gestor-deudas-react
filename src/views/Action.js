@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import UserModal from "../components/UserModal";
 
 const Action = ({ route, user }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const { userSelected } = route.params;
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -28,7 +32,9 @@ const Action = ({ route, user }) => {
     setIsModalVisible(false);
   };
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -112,7 +118,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: Platform.OS === "android" ? 0 : 0, // Apply marginTop only on Android
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",

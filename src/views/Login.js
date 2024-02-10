@@ -14,13 +14,17 @@ import {
   Platform,
   ActivityIndicator,
   Alert,
+  useColorScheme,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { lightColors, darkColors } from "../colors";
 import { fetchUser } from "../utils/UserHelpers";
 
 const Login = ({ setUser, setUserLoggedIn }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
 
   const [hidePass, setHidePass] = useState(true);
@@ -62,7 +66,10 @@ const Login = ({ setUser, setUserLoggedIn }) => {
   };
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[
+        styles.container,
+        { backgroundColor: themeColors.backgroundFirst },
+      ]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView>
@@ -71,42 +78,61 @@ const Login = ({ setUser, setUserLoggedIn }) => {
             source={require("../images/logotwins.png")} // Replace with your logo path
             style={styles.logo}
           />
-          <View style={styles.cardContainer}>
-            <Text style={styles.title}>Inicio de sesión</Text>
-            <View style={styles.input}>
+          <View
+            style={[
+              styles.cardContainer,
+              { backgroundColor: themeColors.backgroundTwo },
+            ]}
+          >
+            <Text style={[styles.title, { color: themeColors.text }]}>
+              Inicio de sesión
+            </Text>
+            <View
+              style={[
+                styles.input,
+                { backgroundColor: themeColors.backgroundFirst },
+              ]}
+            >
               <Ionicons
                 style={styles.iconinput}
                 size={20}
                 name="mail"
-                color="black"
+                color={themeColors.icon}
               />
               <TextInput
-                style={styles.textinput}
+                style={[styles.textinput, { color: themeColors.text }]}
                 inputMode="email"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
                 placeholder="Correo"
+                placeholderTextColor="#808080"
               />
             </View>
-            <View style={styles.input}>
+            <View
+              style={[
+                styles.input,
+                { backgroundColor: themeColors.backgroundFirst },
+              ]}
+            >
               <Ionicons
                 style={styles.iconinput}
                 size={20}
                 name="lock-closed"
-                color="black"
+                color={themeColors.icon}
               />
               <TextInput
-                style={styles.textinput}
+                style={[styles.textinput, { color: themeColors.text }]}
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry={!!hidePass}
                 placeholder="Contraseña"
+                placeholderTextColor="#808080"
               />
               <Ionicons
                 size={20}
                 name={hidePass ? "eye" : "eye-off-sharp"}
                 onPress={() => setHidePass(!hidePass)}
-                color="black"
+                color={themeColors.icon}
               />
             </View>
             {loading ? (
@@ -148,7 +174,6 @@ const Login = ({ setUser, setUserLoggedIn }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     padding: 16,
   },
   logo: {
@@ -159,7 +184,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   cardContainer: {
-    backgroundColor: "#D3D2D2",
     margin: 5,
     padding: 10,
     borderRadius: 5,
@@ -168,12 +192,10 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Montserrat-Bold",
     fontSize: 28,
-    color: "#000",
     marginBottom: 25,
     textAlign: "center",
   },
   input: {
-    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 15,
     marginBottom: 15,

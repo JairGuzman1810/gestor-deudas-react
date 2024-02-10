@@ -11,11 +11,15 @@ import {
   Platform,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import { deleteDebtor } from "../utils/DebtorHelper";
 
 const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
 
   const showMessageWarning = () => {
@@ -96,12 +100,17 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
       statusBarTranslucent
     >
       <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
+        <View
+          style={[
+            styles.modalContent,
+            { backgroundColor: themeColors.backgroundThree },
+          ]}
+        >
           <TouchableOpacity onPress={hideModal}>
             <Ionicons name="close" size={30} color="red" />
           </TouchableOpacity>
 
-          <Text style={styles.title}>
+          <Text style={[styles.title, { color: themeColors.text }]}>
             {`Deudor "${debtor.nombre}" seleccionado.`}
           </Text>
           <View style={styles.button}>
@@ -139,14 +148,13 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "90%",
-    backgroundColor: "white",
     borderRadius: 15,
     padding: 20,
   },
   title: {
     fontFamily: "Montserrat-Bold",
     textAlign: "center",
-    color: "black",
+    color: "#000",
     fontSize: 20,
     marginTop: 10,
   },
@@ -187,7 +195,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: "Montserrat-Bold",
-    color: "white",
+    color: "#fff",
     fontSize: 15,
   },
   touchableOpacity: {

@@ -8,13 +8,17 @@ import {
   View,
   Platform,
   ActivityIndicator,
+  useColorScheme,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
+import { lightColors, darkColors } from "../colors";
 import UserItem from "../components/UserItem";
 import { getAllUsers } from "../utils/UserHelpers";
 
 const MyUsers = () => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [users, setUsers] = useState({});
@@ -50,7 +54,9 @@ const MyUsers = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -96,7 +102,6 @@ export default MyUsers;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",

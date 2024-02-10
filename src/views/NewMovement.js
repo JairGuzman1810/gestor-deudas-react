@@ -13,11 +13,15 @@ import {
   ToastAndroid,
   Alert,
   TextInput,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
 import { addMovement } from "../utils/MovementsHelper";
 
 const NewMovement = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const { debtor, isPayment } = route.params;
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -97,8 +101,6 @@ const NewMovement = ({ route }) => {
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === "ios"); // Close the DatePicker for iOS immediately
     if (selectedDate) {
-      console.log("aqui" + selectedDate);
-
       setDate(selectedDate);
     }
   };
@@ -121,7 +123,9 @@ const NewMovement = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       {/* HEADER */}
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
@@ -172,37 +176,51 @@ const NewMovement = ({ route }) => {
       </View>
       {/* Nombre */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Nombre</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Nombre
+        </Text>
         <View style={styles.separator} />
         <View style={styles.namecontainer}>
           <TouchableOpacity>
-            <Ionicons name="person" size={18} color="black" />
+            <Ionicons name="person" size={18} color={themeColors.icon} />
           </TouchableOpacity>
-          <Text style={styles.name}>{debtor.nombre}</Text>
+          <Text style={[styles.name, { color: themeColors.text }]}>
+            {debtor.nombre}
+          </Text>
         </View>
       </View>
       {/* Importe */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Importe</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Importe
+        </Text>
         <View style={styles.separator} />
       </View>
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="cash"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={amount}
             inputMode="numeric"
             onChangeText={(text) => formatText(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Importe"
+            placeholderTextColor="#808080"
           />
         </View>
-        <Text style={[styles.formattedTitle]}>Previsualización:</Text>
+        <Text style={[styles.formattedTitle, { color: themeColors.text }]}>
+          Previsualización:
+        </Text>
         <Text
           style={[
             styles.formattedAmount,
@@ -225,29 +243,39 @@ const NewMovement = ({ route }) => {
       </View>
       {/* Descripcion */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Descripción</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Descripción
+        </Text>
         <View style={styles.separator} />
       </View>
-      <View style={[styles.section]}>
-        <View style={[styles.input, { height: 125 }]}>
+      <View style={styles.section}>
+        <View
+          style={[
+            styles.input,
+            { height: 125, backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="book"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
             value={description}
             onChangeText={(text) => setDescription(text)}
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             placeholder="Notas/Descripción"
             multiline
+            placeholderTextColor="#808080"
           />
         </View>
       </View>
       {/* Date */}
       <View style={styles.contentcontainer}>
-        <Text style={styles.contenttitle}>Fecha</Text>
+        <Text style={[styles.contenttitle, { color: themeColors.text }]}>
+          Fecha
+        </Text>
         <View style={styles.separator} />
       </View>
       <View
@@ -256,15 +284,24 @@ const NewMovement = ({ route }) => {
           { alignItems: "center", width: "65%", alignSelf: "center" },
         ]}
       >
-        <Pressable onPress={handleDatePress} style={styles.input}>
+        <Pressable
+          onPress={handleDatePress}
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="calendar"
-            color="black"
+            color={themeColors.icon}
           />
           <Text
-            style={[styles.textinput, { textAlign: "center", marginLeft: -10 }]}
+            style={[
+              styles.textinput,
+              { textAlign: "center", marginLeft: -10, color: themeColors.text },
+            ]}
           >
             {date ? date.toLocaleDateString() : "Fecha"}
           </Text>
@@ -288,7 +325,6 @@ export default NewMovement;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   header: {
     width: "100%",
@@ -334,7 +370,6 @@ const styles = StyleSheet.create({
   contenttitle: {
     fontFamily: "Montserrat-Bold",
     fontSize: 17,
-    color: "#000",
   },
   separator: {
     height: 1,
@@ -358,7 +393,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 15,
     marginHorizontal: 10,

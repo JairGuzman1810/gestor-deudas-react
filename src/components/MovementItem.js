@@ -6,9 +6,14 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 
+import { lightColors, darkColors } from "../colors";
+
 const MovementItem = ({ movement, debtor }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
   const [isHeld, setIsHeld] = useState(false);
 
@@ -34,7 +39,9 @@ const MovementItem = ({ movement, debtor }) => {
       style={[
         styles.cardContainer,
         {
-          backgroundColor: isHeld ? "#82E7EB" : "#ffff",
+          backgroundColor: isHeld
+            ? themeColors.backgroundSelected
+            : themeColors.backgroundThree,
         },
       ]}
     >
@@ -68,7 +75,13 @@ const MovementItem = ({ movement, debtor }) => {
           >
             {movement.descripcion}
           </Text>
-          <Text style={[styles.text, styles.rightAlignedText]}>
+          <Text
+            style={[
+              styles.text,
+              styles.rightAlignedText,
+              { color: themeColors.text },
+            ]}
+          >
             {movement.fecha !== undefined && movement.fecha !== 0
               ? new Date(movement.fecha).toLocaleDateString()
               : "--"}
@@ -81,8 +94,6 @@ const MovementItem = ({ movement, debtor }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#fff",
-
     marginHorizontal: 4,
     marginBottom: 6,
     ...Platform.select({
@@ -106,7 +117,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   text: {
-    color: "black",
     paddingHorizontal: 8,
     fontSize: 13.1,
     fontFamily: "Montserrat-Regular",

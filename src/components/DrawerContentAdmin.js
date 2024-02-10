@@ -2,11 +2,21 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useFonts } from "expo-font";
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { lightColors, darkColors } from "../colors";
 
 const DrawerContentAdmin = (props) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const { user } = props; // Obtén el objeto de usuario de las propiedades
   const auth = FIREBASE_AUTH;
   const [fontsLoaded] = useFonts({
@@ -43,7 +53,13 @@ const DrawerContentAdmin = (props) => {
   };
 
   return (
-    <DrawerContentScrollView style={styles.drawerContent} {...props}>
+    <DrawerContentScrollView
+      style={[
+        styles.drawerContent,
+        { backgroundColor: themeColors.backgroundDrawer },
+      ]}
+      {...props}
+    >
       <View style={styles.userInfoContainer}>
         <View>
           <Image
@@ -51,31 +67,46 @@ const DrawerContentAdmin = (props) => {
             source={require("../images/logotwins.png")}
           />
         </View>
-        <Text style={styles.userinfo}>{user.nombre}</Text>
-        <Text style={[styles.userinfo, { marginBottom: 10 }]}>
+        <Text style={[styles.userinfo, { color: themeColors.text }]}>
+          {user.nombre}
+        </Text>
+        <Text
+          style={[
+            styles.userinfo,
+            { marginBottom: 10, color: themeColors.text },
+          ]}
+        >
           {user.correo}
         </Text>
       </View>
       {/* Container para Cambiar Contraseña y Cerrar Sesión */}
       <View style={styles.actionContainer}>
         <TouchableOpacity style={styles.actionItem} onPress={handleMyUsers}>
-          <Ionicons name="person" size={24} color="black" />
-          <Text style={styles.actionText}>Mis Usuarios</Text>
+          <Ionicons name="person" size={24} color={themeColors.icon} />
+          <Text style={[styles.actionText, { color: themeColors.text }]}>
+            Mis Usuarios
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionItem} onPress={handleCreateUser}>
-          <Ionicons name="person-add" size={24} color="black" />
-          <Text style={styles.actionText}>Crear Usuarios</Text>
+          <Ionicons name="person-add" size={24} color={themeColors.icon} />
+          <Text style={[styles.actionText, { color: themeColors.text }]}>
+            Crear Usuarios
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionItem}
           onPress={handleChangePassword}
         >
-          <Ionicons name="lock-open" size={24} color="black" />
-          <Text style={styles.actionText}>Cambiar Contraseña</Text>
+          <Ionicons name="lock-open" size={24} color={themeColors.icon} />
+          <Text style={[styles.actionText, { color: themeColors.text }]}>
+            Cambiar Contraseña
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionItem} onPress={handleLogout}>
-          <Ionicons name="log-out" size={24} color="black" />
-          <Text style={styles.actionText}>Cerrar Sesión</Text>
+          <Ionicons name="log-out" size={24} color={themeColors.icon} />
+          <Text style={[styles.actionText, { color: themeColors.text }]}>
+            Cerrar Sesión
+          </Text>
         </TouchableOpacity>
       </View>
     </DrawerContentScrollView>
@@ -86,7 +117,6 @@ const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
     borderColor: "#000",
-    backgroundColor: "#D3D2D2",
   },
   image: {
     height: 80,
@@ -98,6 +128,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   userInfoContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#878585",

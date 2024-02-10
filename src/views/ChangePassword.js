@@ -16,12 +16,16 @@ import {
   Platform,
   ToastAndroid,
   Alert,
+  useColorScheme,
 } from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { lightColors, darkColors } from "../colors";
 import { updatePass } from "../utils/UserHelpers";
 
 const ChangePassword = ({ user }) => {
+  const colorScheme = useColorScheme();
+  const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -81,7 +85,9 @@ const ChangePassword = ({ user }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColors.backgroundTwo }]}
+    >
       <View style={styles.header}>
         <View style={styles.toolbarContainer}>
           <TouchableOpacity style={styles.toolbarButton} onPress={goBack}>
@@ -94,79 +100,101 @@ const ChangePassword = ({ user }) => {
       </View>
       {/* Old Password */}
       <View style={styles.section}>
-        <Text style={styles.label}>Contraseña Antigua</Text>
+        <Text style={[styles.label, { color: themeColors.text }]}>
+          Contraseña Antigua
+        </Text>
         <View style={styles.separator} />
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="lock-closed"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             value={oldPassword}
             onChangeText={(text) => setOldPassword(text)}
             secureTextEntry={!!hideOldPass}
             placeholder="Contraseña Antigua"
+            placeholderTextColor="#808080"
           />
           <Ionicons
             size={20}
             name={hideOldPass ? "eye" : "eye-off-sharp"}
             onPress={() => setHideOldPass(!hideOldPass)}
-            color="black"
+            color={themeColors.icon}
           />
         </View>
       </View>
 
       {/* New Password */}
       <View style={styles.section}>
-        <Text style={styles.label}>Nueva Contraseña</Text>
-        <View style={[styles.separator]} />
-        <View style={styles.input}>
+        <Text style={[styles.label, { color: themeColors.text }]}>
+          Nueva Contraseña
+        </Text>
+        <View style={styles.separator} />
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="lock-closed"
-            color="black"
+            color={themeColors.text}
           />
           <TextInput
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             value={newPassword}
             onChangeText={(text) => setNewPassword(text)}
             secureTextEntry={!!hideNewPass}
             placeholder="Nueva Contraseña"
+            placeholderTextColor="#808080"
           />
           <Ionicons
             size={20}
             name={hideNewPass ? "eye" : "eye-off-sharp"}
             onPress={() => setHideNewPass(!hideNewPass)}
-            color="black"
+            color={themeColors.text}
           />
         </View>
       </View>
 
       {/* Repeat Password */}
       <View style={styles.section}>
-        <View style={styles.input}>
+        <View
+          style={[
+            styles.input,
+            { backgroundColor: themeColors.backgroundFirst },
+          ]}
+        >
           <Ionicons
             style={styles.iconinput}
             size={20}
             name="lock-closed"
-            color="black"
+            color={themeColors.icon}
           />
           <TextInput
-            style={styles.textinput}
+            style={[styles.textinput, { color: themeColors.text }]}
             value={repeatPassword}
             onChangeText={(text) => setRepeatPassword(text)}
             secureTextEntry={!!hideRepeatPass}
             placeholder="Repetir Contraseña"
+            placeholderTextColor="#808080"
           />
           <Ionicons
             size={20}
             name={hideRepeatPass ? "eye" : "eye-off-sharp"}
             onPress={() => setHideRepeatPass(!hideRepeatPass)}
-            color="black"
+            color={themeColors.icon}
           />
         </View>
       </View>
@@ -204,7 +232,6 @@ const ChangePassword = ({ user }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
   },
   section: {
     margin: 10,
@@ -313,8 +340,8 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Montserrat-Bold",
     fontSize: 18,
-    color: "white",
     textAlign: "center",
+    color: "#fff",
   },
   titlecontainer: {
     flex: 1,
