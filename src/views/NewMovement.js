@@ -4,19 +4,19 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+  Alert,
   Platform,
   Pressable,
-  ToastAndroid,
-  Alert,
+  StyleSheet,
+  Text,
   TextInput,
+  ToastAndroid,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { addMovement } from "../utils/MovementsHelper";
 
 const NewMovement = ({ route }) => {
@@ -45,8 +45,6 @@ const NewMovement = ({ route }) => {
         debtor
       );
       if (result !== null) {
-        console.log("Movement added successfully");
-
         if (Platform.OS === "android") {
           ToastAndroid.show(
             "Nuevo movimiento registrado para el deudor " + debtor.nombre + ".",
@@ -64,8 +62,6 @@ const NewMovement = ({ route }) => {
           routes: [{ name: "DetailDebtor", params: { debtor: result } }],
         });
       } else {
-        console.log("Added failed");
-
         // Display error message for failure
         if (Platform.OS === "android") {
           ToastAndroid.show(

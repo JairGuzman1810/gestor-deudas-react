@@ -2,16 +2,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import {
-  View,
+  Modal,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Modal,
   TouchableWithoutFeedback,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 
 const SortDebtorModal = ({
   isModalVisible,
@@ -45,8 +45,6 @@ const SortDebtorModal = ({
       sortingOrder: newSortingOrder,
     };
 
-    // Actualizar el estado con el nuevo objeto
-    console.log(sortingValuesObject);
     setSortingValues(sortingValuesObject);
 
     // Guardar el objeto en AsyncStorage

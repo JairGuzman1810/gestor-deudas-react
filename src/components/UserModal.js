@@ -4,19 +4,19 @@ import { useNavigation } from "@react-navigation/native";
 import { deleteUser, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
+  Alert,
   Modal,
   Platform,
+  StyleSheet,
+  Text,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
 import { FIREBASE_AUTH } from "../../firebaseConfig";
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { decrypt } from "../utils/AESUtils";
 import { deleteUserData } from "../utils/UserHelpers";
 
@@ -24,7 +24,6 @@ const UserModal = ({ userSelected, isModalVisible, hideModal, user }) => {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? lightColors : darkColors;
   const navigation = useNavigation();
-  console.log(userSelected);
 
   const showToast = (title, message) => {
     if (Platform.OS === "android") {

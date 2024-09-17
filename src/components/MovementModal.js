@@ -3,18 +3,18 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
+  Alert,
   Modal,
   Platform,
+  StyleSheet,
+  Text,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { deleteMovement } from "../utils/MovementsHelper";
 const MovementModal = ({ movement, debtor, isModalVisible, hideModal }) => {
   const colorScheme = useColorScheme();
@@ -27,8 +27,6 @@ const MovementModal = ({ movement, debtor, isModalVisible, hideModal }) => {
       const result = await deleteMovement(debtor, movement);
 
       if (result) {
-        console.log("Delete successful");
-
         if (Platform.OS === "android") {
           ToastAndroid.show(
             "Movimiento eliminado con exíto.",

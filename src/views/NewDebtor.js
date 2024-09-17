@@ -3,18 +3,18 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
-  View,
+  Alert,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { addDebtor } from "../utils/DebtorHelper";
 
 const formatPhoneNumber = (phoneNumber) => {
@@ -61,8 +61,6 @@ const NewDebtor = () => {
     try {
       const result = await addDebtor(name, phoneNumber, notes);
       if (result) {
-        console.log("Debtor added successfully");
-
         if (Platform.OS === "android") {
           ToastAndroid.show("Deudor agregado.", ToastAndroid.SHORT);
         } else {

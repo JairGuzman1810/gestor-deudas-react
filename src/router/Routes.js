@@ -1,8 +1,10 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
 import DrawerContentAdmin from "../components/DrawerContentAdmin";
 import DrawerContentUser from "../components/DrawerContentUser";
 import Action from "../views/Action";
@@ -24,113 +26,120 @@ import Splashscreen from "../views/Splashscreen";
 const Drawer = createDrawerNavigator();
 
 const Routes = ({ userLoggedIn, setUserLoggedIn, setUser, user }) => {
+  const colorScheme = useColorScheme();
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        //Se tiene que condicionar con el return, ya que si no, sale en blanco
-        drawerContent={(props) => {
-          if (userLoggedIn && user && user.privilegios === "admin") {
-            // User is logged in and has admin privileges
-            return <DrawerContentAdmin user={user} {...props} />;
-          } else if (userLoggedIn && user) {
-            // User is logged in but not an admin
-            return <DrawerContentUser user={user} {...props} />;
-          } else {
-            // User is not logged in
-            return null; // or any other default drawer content
-          }
-        }}
-        styles={styles.container}
-        initialRouteName="SplashScreen"
-      >
-        <Drawer.Screen
-          name="SplashScreen"
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Drawer.Navigator
+          //Se tiene que condicionar con el return, ya que si no, sale en blanco
+          drawerContent={(props) => {
+            if (userLoggedIn && user && user.privilegios === "admin") {
+              // User is logged in and has admin privileges
+              return <DrawerContentAdmin user={user} {...props} />;
+            } else if (userLoggedIn && user) {
+              // User is logged in but not an admin
+              return <DrawerContentUser user={user} {...props} />;
+            } else {
+              // User is not logged in
+              return null; // or any other default drawer content
+            }
+          }}
+          styles={styles.container}
+          initialRouteName="SplashScreen"
         >
-          {(props) => <Splashscreen {...props} userLoggedIn={userLoggedIn} />}
-        </Drawer.Screen>
-        <Drawer.Screen
-          name="Login"
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        >
-          {(props) => (
-            <Login
-              {...props}
-              setUser={setUser}
-              setUserLoggedIn={setUserLoggedIn}
-            />
-          )}
-        </Drawer.Screen>
-        <Drawer.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Drawer.Screen
-          name="ChangePassword"
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        >
-          {(props) => <ChangePassword {...props} user={user} />}
-        </Drawer.Screen>
-        <Drawer.Screen
-          name="NewDebtor"
-          component={NewDebtor}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="DetailDebtor"
-          component={DetailDebtor}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="EditDebtor"
-          component={EditDebtor}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="NewMovement"
-          component={NewMovement}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="EditMovement"
-          component={EditMovement}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="CreateUser"
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        >
-          {(props) => <CreateUser {...props} user={user} />}
-        </Drawer.Screen>
-        <Drawer.Screen
-          name="MyUsers"
-          component={MyUsers}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="Action"
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        >
-          {(props) => <Action {...props} user={user} />}
-        </Drawer.Screen>
-        <Drawer.Screen
-          name="ChangeUserEmail"
-          component={ChangeUserEmail}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="ChangeUserName"
-          component={ChangeUserName}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-        <Drawer.Screen
-          name="ChangeUserPassword"
-          component={ChangeUserPassword}
-          options={{ headerShown: false, swipeEdgeWidth: 0 }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+          <Drawer.Screen
+            name="SplashScreen"
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          >
+            {(props) => <Splashscreen {...props} userLoggedIn={userLoggedIn} />}
+          </Drawer.Screen>
+          <Drawer.Screen
+            name="Login"
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          >
+            {(props) => (
+              <Login
+                {...props}
+                setUser={setUser}
+                setUserLoggedIn={setUserLoggedIn}
+              />
+            )}
+          </Drawer.Screen>
+          <Drawer.Screen
+            name="Home"
+            component={Home}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name="ChangePassword"
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          >
+            {(props) => <ChangePassword {...props} user={user} />}
+          </Drawer.Screen>
+          <Drawer.Screen
+            name="NewDebtor"
+            component={NewDebtor}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="DetailDebtor"
+            component={DetailDebtor}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="EditDebtor"
+            component={EditDebtor}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="NewMovement"
+            component={NewMovement}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="EditMovement"
+            component={EditMovement}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="CreateUser"
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          >
+            {(props) => <CreateUser {...props} user={user} />}
+          </Drawer.Screen>
+          <Drawer.Screen
+            name="MyUsers"
+            component={MyUsers}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="Action"
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          >
+            {(props) => <Action {...props} user={user} />}
+          </Drawer.Screen>
+          <Drawer.Screen
+            name="ChangeUserEmail"
+            component={ChangeUserEmail}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="ChangeUserName"
+            component={ChangeUserName}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+          <Drawer.Screen
+            name="ChangeUserPassword"
+            component={ChangeUserPassword}
+            options={{ headerShown: false, swipeEdgeWidth: 0 }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+      <StatusBar
+        style="auto"
+        backgroundColor={colorScheme === "dark" ? "#000" : "#FFF"}
+      />
+    </SafeAreaView>
   );
 };
 

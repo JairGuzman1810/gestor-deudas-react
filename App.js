@@ -20,7 +20,6 @@ export default function App() {
           if (currentUser) {
             // Usuario autenticado
             setUserLoggedIn(true);
-            //console.log("Usuario autenticado");
 
             // Consigue la información del usuario y valida si es
             const userData = await fetchUser(currentUser);
@@ -29,7 +28,6 @@ export default function App() {
             // Usuario no autenticado
             setUserLoggedIn(false);
             setUser(null);
-            console.log("Usuario no autenticado");
           }
         } catch (error) {
           console.error("Error handling auth state change:", error);

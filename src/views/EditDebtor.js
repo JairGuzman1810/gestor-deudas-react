@@ -3,18 +3,18 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
-  View,
+  Alert,
+  Platform,
+  StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { updateDebtor } from "../utils/DebtorHelper";
 
 const formatPhoneNumber = (phoneNumber) => {
@@ -88,8 +88,6 @@ const EditDebtor = ({ route }) => {
       const result = await updateDebtor(debtor.uid, name, phoneNumber, notes);
 
       if (result) {
-        console.log("Update successful");
-
         if (Platform.OS === "android") {
           ToastAndroid.show(
             "Información de deudor actualizada.",

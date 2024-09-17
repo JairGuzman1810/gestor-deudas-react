@@ -3,18 +3,18 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
+  Alert,
   Modal,
   Platform,
+  StyleSheet,
+  Text,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import { deleteDebtor } from "../utils/DebtorHelper";
 
 const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
@@ -44,8 +44,6 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
       const result = await deleteDebtor(debtor.uid);
 
       if (result) {
-        console.log("Delete successful");
-
         hideModal();
 
         navigation.reset({
@@ -59,8 +57,6 @@ const DebtorModal = ({ debtor, isModalVisible, hideModal }) => {
           Alert.alert("Deudor eliminado con exíto.");
         }
       } else {
-        console.log("Delete failed");
-
         // Display error message for failure
         if (Platform.OS === "android") {
           ToastAndroid.show(

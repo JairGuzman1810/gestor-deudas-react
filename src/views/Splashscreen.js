@@ -10,18 +10,17 @@ import {
   useColorScheme,
 } from "react-native";
 import Animated, {
-  withTiming,
-  useSharedValue,
-  useAnimatedStyle,
   Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 
 const Splashscreen = ({ userLoggedIn }) => {
   const colorScheme = useColorScheme();
   const themeColors = colorScheme === "light" ? lightColors : darkColors;
-  console.log(colorScheme);
 
   const navigation = useNavigation();
 

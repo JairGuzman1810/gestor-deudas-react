@@ -4,19 +4,19 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
+  Alert,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  TouchableOpacity,
-  Pressable,
   ToastAndroid,
-  Alert,
+  TouchableOpacity,
   useColorScheme,
+  View,
 } from "react-native";
 
-import { lightColors, darkColors } from "../colors";
+import { darkColors, lightColors } from "../colors";
 import MovementModal from "../components/MovementModal";
 import { updateMovement } from "../utils/MovementsHelper";
 
@@ -74,8 +74,6 @@ const EditMovement = ({ route }) => {
         date
       );
       if (result) {
-        console.log("Movement updated successfully");
-
         if (Platform.OS === "android") {
           ToastAndroid.show(
             "Movimiento actualizado para el deudor " + debtor.nombre + ".",

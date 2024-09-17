@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { get, push, ref, set, update, remove } from "firebase/database";
+import { get, push, ref, remove, set, update } from "firebase/database";
 
+import { FIREBASE_AUTH, FIREBASE_DATABASE } from "../../firebaseConfig";
 import { updateDebtorDetails } from "./CommonHelper";
-import { FIREBASE_DATABASE, FIREBASE_AUTH } from "../../firebaseConfig";
 
 export const fetchMovements = async (debtor) => {
   const user = FIREBASE_AUTH.currentUser;
@@ -69,9 +69,6 @@ export const addMovement = async (amount, description, date, debtor) => {
       );
 
       if (result) {
-        console.log("Update successful");
-        console.log(`Movement data added successfully at key ${pushKey}`);
-
         // Actualizar el objeto 'debtor' con los nuevos campos
         debtor.ultimomovimiento = creado;
         debtor.deudaindividual = deudaindividual;
@@ -130,7 +127,6 @@ export const updateMovement = async (
       );
 
       if (result) {
-        console.log("Update successful");
         // Actualizar el objeto 'debtor' con los nuevos campos
 
         debtor.deudaindividual = amountupdate;
@@ -195,7 +191,6 @@ export const deleteMovement = async (debtor, movement) => {
       );
 
       if (result) {
-        console.log("Update successful");
         // Actualizar el objeto 'debtor' con los nuevos campos
 
         debtor.deudaindividual = amountupdate;
